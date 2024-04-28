@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Chakra_Petch } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/react";
 
-const inter = Inter({ subsets: ["latin"] });
+const chakra_petch = Chakra_Petch({
+  weight: ["300", "400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  fallback: ["Helvetica", "Arial", "sans-serif"],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,7 +22,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={chakra_petch.className}>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
