@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Chakra_Petch } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
+import Header from "@/components/layout/Header";
 
 const chakra_petch = Chakra_Petch({
   weight: ["300", "400", "500", "700"],
@@ -23,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={chakra_petch.className}>
+        <Header />
         {children}
         <Analytics />
       </body>

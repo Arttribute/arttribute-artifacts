@@ -6,7 +6,7 @@ interface LogoProps {
 }
 export function Logo({ text, link }: LogoProps) {
   return (
-    <Link href={link || "/"} className=" text-base font-bold">
+    <Link href={link || "/"} className="text-base font-bold">
       <div className="flex">
         <LogoSVG />
         <div className="ml-1 m-1">{text}</div>
