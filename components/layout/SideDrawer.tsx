@@ -12,7 +12,7 @@ import Link from "next/link";
 const drawerItems = [
   {
     title: "Artifacts",
-    link: "#",
+    link: "/artifacts",
     icon: <Boxes className="w-4 h-4" />,
   },
   {
