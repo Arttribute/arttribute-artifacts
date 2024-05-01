@@ -3,6 +3,8 @@ import { Chakra_Petch } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import Header from "@/components/layout/Header";
+import SideDrawer from "@/components/layout/SideDrawer";
+import { Separator } from "@/components/ui/separator";
 
 const chakra_petch = Chakra_Petch({
   weight: ["300", "400", "500", "700"],
@@ -25,7 +27,17 @@ export default function RootLayout({
     <html lang="en">
       <body className={chakra_petch.className}>
         <Header />
-        {children}
+        <div className="flex">
+          <div className="h-full w-3/5 md:w-2/5 lg:w-1/5 rounded-none p-6 hidden lg:block">
+            <SideDrawer />
+          </div>
+          <Separator
+            orientation="vertical"
+            className="min-h-[calc(100vh-4rem)] hidden lg:block w-[0.5px]"
+          />
+          {children}
+        </div>
+
         <Analytics />
       </body>
     </html>

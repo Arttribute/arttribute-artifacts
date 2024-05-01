@@ -14,7 +14,7 @@ const Header = () => {
   return (
     <nav className="w-full border-b border-b-foreground/10 h-16">
       <div className="w-full container p-3 flex justify-between items-center">
-        <SideDrawer />
+        <SideDrawer isSmallScreen />
         <Logo text="Arttribute" />
         <AuthButton />
       </div>
