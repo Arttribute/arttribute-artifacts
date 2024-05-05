@@ -2,7 +2,7 @@ export const artifacts: Artifact[] = [
   {
     id: "1",
     creator: "0x1234",
-    image_url: "/vercel.svg",
+    image_url: "/mona.jpg",
     artifact_hash: "1234",
     license: "open",
     whitelist: [],
@@ -11,7 +11,7 @@ export const artifacts: Artifact[] = [
   {
     id: "2",
     creator: "0x1234",
-    image_url: "/vercel.svg",
+    image_url: "/mona.jpg",
     artifact_hash: "1234",
     license: "open",
     whitelist: [],
@@ -20,7 +20,7 @@ export const artifacts: Artifact[] = [
   {
     id: "3",
     creator: "0x1234",
-    image_url: "/vercel.svg",
+    image_url: "/mona.jpg",
     artifact_hash: "1234",
     license: "open",
     whitelist: [],
@@ -29,7 +29,7 @@ export const artifacts: Artifact[] = [
   {
     id: "4",
     creator: "0x1234",
-    image_url: "/vercel.svg",
+    image_url: "/mona.jpg",
     artifact_hash: "1234",
     license: "open",
     whitelist: [],
@@ -38,7 +38,7 @@ export const artifacts: Artifact[] = [
   {
     id: "5",
     creator: "0x1234",
-    image_url: "/vercel.svg",
+    image_url: "/mona.jpg",
     artifact_hash: "1234",
     license: "open",
     whitelist: [],
@@ -47,7 +47,7 @@ export const artifacts: Artifact[] = [
   {
     id: "6",
     creator: "0x1234",
-    image_url: "/vercel.svg",
+    image_url: "/mona.jpg",
     artifact_hash: "1234",
     license: "open",
     whitelist: [],
@@ -56,7 +56,7 @@ export const artifacts: Artifact[] = [
   {
     id: "7",
     creator: "0x1234",
-    image_url: "/vercel.svg",
+    image_url: "/mona.jpg",
     artifact_hash: "1234",
     license: "open",
     whitelist: [],
@@ -65,7 +65,7 @@ export const artifacts: Artifact[] = [
   {
     id: "8",
     creator: "0x1234",
-    image_url: "/vercel.svg",
+    image_url: "/mona.jpg",
     artifact_hash: "1234",
     license: "open",
     whitelist: [],
@@ -74,7 +74,7 @@ export const artifacts: Artifact[] = [
   {
     id: "9",
     creator: "0x1234",
-    image_url: "/vercel.svg",
+    image_url: "/mona.jpg",
     artifact_hash: "1234",
     license: "open",
     whitelist: [],
@@ -83,10 +83,24 @@ export const artifacts: Artifact[] = [
   {
     id: "10",
     creator: "0x1234",
-    image_url: "/vercel.svg",
+    image_url: "/mona.jpg",
     artifact_hash: "1234",
     license: "open",
     whitelist: [],
     blacklist: [],
   },
+];
+
+export const addresses: ListedUser[] = [
+  { id: "0x1234", date_added: new Date("2024-04-26 14:47:09.836985+00") },
+  { id: "0x1234", date_added: new Date("2024-04-26 14:47:09.836985+00") },
+  { id: "0x1234", date_added: new Date("2024-04-26 14:47:09.836985+00") },
+  { id: "0x1234", date_added: new Date("2024-04-26 14:47:09.836985+00") },
+  { id: "0x1234", date_added: new Date("2024-04-26 14:47:09.836985+00") },
+  { id: "0x1234", date_added: new Date("2024-04-26 14:47:09.836985+00") },
+  { id: "0x1234", date_added: new Date("2024-04-26 14:47:09.836985+00") },
+  { id: "0x1234", date_added: new Date("2024-04-26 14:47:09.836985+00") },
+  { id: "0x1234", date_added: new Date("2024-04-26 14:47:09.836985+00") },
+  { id: "0x1234", date_added: new Date("2024-04-26 14:47:09.836985+00") },
+  { id: "0x1234", date_added: new Date("2024-04-26 14:47:09.836985+00") },
 ];

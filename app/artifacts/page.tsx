@@ -1,9 +1,22 @@
 import { buttonVariants } from "@/components/ui/button";
-import { artifacts } from "@/lib/dummy";
 import Image from "next/image";
 import Link from "next/link";
 
+const getArtifacts = async () => {
+  const res = await fetch(`${process.env.BASE_URL}/api/artifacts`, {
+    next: { revalidate: 0 },
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+
+  return res.json();
+};
+
 export default async function Artifacts() {
+  const artifacts: Artifact[] = await getArtifacts();
+
   return (
     <div className="container p-6 space-y-2 w-full">
       <div className="flex justify-between items-center">
@@ -14,18 +27,19 @@ export default async function Artifacts() {
       </div>
       <div className="flex flex-wrap gap-2 w-full">
         {artifacts.map((item) => (
-          <div
+          <Link
+            href={`/artifacts/${item.id}`}
             key={item.id}
-            className="w-[32%] md:w-[24%] lg:w-[19%] xl:w-[16%] p-4 rounded-lg border-2 aspect-square flex justify-center items-center"
+            className="w-[32%] md:w-[24%] lg:w-[19%] xl:w-[16%] p-1 rounded-lg border-2 flex justify-center items-center hover:border-primary/50 transition-all duration-200 ease-in-out"
           >
             <Image
               src={item.image_url}
               alt="Vercel Logo"
-              width={500}
-              height={500}
-              className="object-cover"
+              width={400}
+              height={400}
+              className="object-cover rounded-lg aspect-square"
             />
-          </div>
+          </Link>
         ))}
       </div>
     </div>

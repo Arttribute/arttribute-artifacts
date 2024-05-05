@@ -1,6 +1,19 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
+
+export const mapLicense = (license: LicenseType) => {
+  switch (license) {
+    case "open":
+      return "Open";
+    case "exclusive":
+      return "Exclusive";
+    case "non_commercial":
+      return "Non Commercial";
+    case "exclusive_non_commercial":
+      return "Exclusive Non Commercial";
+  }
+};
