@@ -104,3 +104,106 @@ export const addresses: ListedUser[] = [
   { id: "0x1234", date_added: new Date("2024-04-26 14:47:09.836985+00") },
   { id: "0x1234", date_added: new Date("2024-04-26 14:47:09.836985+00") },
 ];
+
+// type Collection = {
+//   id: string;
+//   creator: string; // web3address
+//   name: string;
+//   license: LicenseType;
+//   whitelist: ListedUser[];
+//   blacklist: ListedUser[];
+//   created_at: Date;
+// };
+
+export const collections: Collection[] = [
+  {
+    id: "1",
+    creator: "0x1234",
+    name: "Collection 1",
+    license: "open",
+    whitelist: [],
+    blacklist: [],
+    created_at: new Date("2024-08-26 14:47:09.836985+00"),
+  },
+  {
+    id: "2",
+    creator: "0x1234",
+    name: "Collection 2",
+    license: "open",
+    whitelist: [],
+    blacklist: [],
+    created_at: new Date("2024-04-26 14:47:09.836985+00"),
+  },
+  {
+    id: "3",
+    creator: "0x1234",
+    name: "Collection 3",
+    license: "open",
+    whitelist: [],
+    blacklist: [],
+    created_at: new Date("2024-04-26 14:47:09.836985+00"),
+  },
+  {
+    id: "4",
+    creator: "0x1234",
+    name: "Collection 4",
+    license: "open",
+    whitelist: [],
+    blacklist: [],
+    created_at: new Date("2024-04-26 14:47:09.836985+00"),
+  },
+  {
+    id: "5",
+    creator: "0x1234",
+    name: "Collection 5",
+    license: "open",
+    whitelist: [],
+    blacklist: [],
+    created_at: new Date("2024-04-26 14:47:09.836985+00"),
+  },
+  {
+    id: "6",
+    creator: "0x1234",
+    name: "Collection 6",
+    license: "open",
+    whitelist: [],
+    blacklist: [],
+    created_at: new Date("2024-04-26 14:47:09.836985+00"),
+  },
+  {
+    id: "7",
+    creator: "0x1234",
+    name: "Collection 7",
+    license: "open",
+    whitelist: [],
+    blacklist: [],
+    created_at: new Date("2024-04-26 14:47:09.836985+00"),
+  },
+  {
+    id: "8",
+    creator: "0x1234",
+    name: "Collection 8",
+    license: "open",
+    whitelist: [],
+    blacklist: [],
+    created_at: new Date("2024-04-26 14:47:09.836985+00"),
+  },
+  {
+    id: "9",
+    creator: "0x1234",
+    name: "Collection 9",
+    license: "open",
+    whitelist: [],
+    blacklist: [],
+    created_at: new Date("2024-04-26 14:47:09.836985+00"),
+  },
+  {
+    id: "10",
+    creator: "0x1234",
+    name: "Collection 10",
+    license: "open",
+    whitelist: [],
+    blacklist: [],
+    created_at: new Date("2024-04-26 14:47:09.836985+00"),
+  },
+];

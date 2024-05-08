@@ -21,6 +21,7 @@ type Collection = {
   license: LicenseType;
   whitelist: ListedUser[];
   blacklist: ListedUser[];
+  created_at: Date;
 };
 
 type CollectionArtifact = {

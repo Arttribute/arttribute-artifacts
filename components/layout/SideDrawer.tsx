@@ -17,7 +17,7 @@ const drawerItems = [
   },
   {
     title: "Collections",
-    link: "#",
+    link: "/collections",
     icon: <Library className="w-4 h-4" />,
   },
   {

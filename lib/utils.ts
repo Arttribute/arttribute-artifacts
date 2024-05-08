@@ -19,5 +19,5 @@ export const mapLicense = (license: LicenseType) => {
 };
 
 export const formatDate = (date: Date) => {
-  return new Intl.DateTimeFormat("en-US").format(date);
+  return new Intl.DateTimeFormat("en-US").format(new Date(date));
 };
