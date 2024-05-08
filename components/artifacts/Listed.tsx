@@ -23,6 +23,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
+import { formatDate } from "@/lib/utils";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -67,7 +68,7 @@ export const columns: ColumnDef<ListedUser>[] = [
     header: "Date Added",
     cell: ({ row }) => {
       const date: Date = row.getValue("date_added");
-      const formatted = new Intl.DateTimeFormat("en-US").format(date);
+      const formatted = formatDate(date);
 
       return <div className="text-right font-medium">{formatted}</div>;
     },

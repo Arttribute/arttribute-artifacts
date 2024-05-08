@@ -17,3 +17,7 @@ export const mapLicense = (license: LicenseType) => {
       return "Exclusive Non Commercial";
   }
 };
+
+export const formatDate = (date: Date) => {
+  return new Intl.DateTimeFormat("en-US").format(date);
+};
