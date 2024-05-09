@@ -12,16 +12,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
 import { artifacts } from "@/lib/dummy";
+import SelectLicenseFormItem from "./SelectLicenseFormItem";
 
 const MAX_FILE_SIZE = 5000000;
 
@@ -60,7 +53,6 @@ const CreateArtifactForm = () => {
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
     if (!values.file) return;
     console.log({
       id: String(artifacts.length + 1),
@@ -111,29 +103,10 @@ const CreateArtifactForm = () => {
           control={form.control}
           name="license"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>License</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a license to display" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="open">Open</SelectItem>
-                  <SelectItem value="exclusive">Exclusive</SelectItem>
-                  <SelectItem value="non_commercial">Non Commercial</SelectItem>
-                  <SelectItem value="exclusive_non_commercial">
-                    Exclusive Non Commercial
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                Carefully choose how you want your work to be use. It is
-                irrevocable!
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
+            <SelectLicenseFormItem
+              onValueChange={field.onChange}
+              defaultValue={field.value}
+            />
           )}
         />
         <Button type="submit">Submit</Button>
