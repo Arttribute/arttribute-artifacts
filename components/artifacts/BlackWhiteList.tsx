@@ -5,10 +5,11 @@ import { addresses } from "@/lib/dummy";
 type Props = {
   blacklist: ListedUser[];
   whitelist: ListedUser[];
-  artifactId: string;
+  module: "artifacts" | "collections";
+  id: string;
 };
 
-const BlackWhiteList = ({ blacklist, whitelist, artifactId }: Props) => {
+const BlackWhiteList = ({ blacklist, whitelist, module, id }: Props) => {
   const handleChangeList = async (
     directive: "black" | "white",
     list: ListedUser[],
@@ -16,7 +17,7 @@ const BlackWhiteList = ({ blacklist, whitelist, artifactId }: Props) => {
   ) => {
     "use server";
     const res = await fetch(
-      `${process.env.BASE_URL}/api/artifacts/${artifactId}/${directive}list`,
+      `${process.env.BASE_URL}/api/${module}/${id}/${directive}list`,
       {
         method: "PUT",
         body: JSON.stringify({ list, action }),

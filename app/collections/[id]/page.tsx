@@ -1,5 +1,7 @@
 import BlackWhiteList from "@/components/artifacts/BlackWhiteList";
+import ImageGrid from "@/components/ImageGrid";
 import { Separator } from "@/components/ui/separator";
+import { artifacts } from "@/lib/dummy";
 import { mapLicense } from "@/lib/utils";
 import Image from "next/image";
 
@@ -7,8 +9,8 @@ type Params = {
   id: string;
 };
 
-const getArtifactById = async (id: string) => {
-  const res = await fetch(`${process.env.BASE_URL}/api/artifacts/${id}`, {
+const getCollectionById = async (id: string) => {
+  const res = await fetch(`${process.env.BASE_URL}/api/collections/${id}`, {
     next: { revalidate: 0 },
   });
 
@@ -19,11 +21,13 @@ const getArtifactById = async (id: string) => {
   return res.json();
 };
 
-export default async function Artifact({ params }: { params: Params }) {
+// TODO: fetch collection items to get images
+
+export default async function Collection({ params }: { params: Params }) {
   const { id } = params;
 
-  const { creator, image_url, license, whitelist, blacklist }: Artifact =
-    await getArtifactById(id);
+  const { creator, license, whitelist, blacklist }: Collection =
+    await getCollectionById(id);
 
   return (
     <div className="container p-6 space-y-2 w-full lg:pt-12 lg:pl-20">
@@ -31,13 +35,8 @@ export default async function Artifact({ params }: { params: Params }) {
         <div className="mx-auto md:m-0 flex justify-center items-center gap-2">
           {/* p-0.5 border-2 rounded-lg */}
           <Separator orientation="vertical" className="h-full w-[1px]" />
-          <Image
-            src={image_url}
-            alt="artifact"
-            width={400}
-            height={400}
-            className="object-cover rounded-lg aspect-square"
-          />
+          <ImageGrid images={Array(5).fill(artifacts[0].image_url)} />{" "}
+          {/* TODO: replace this */}
           <Separator orientation="vertical" className="h-full w-[1px]" />
         </div>
         <div className="space-y-2">
@@ -49,7 +48,7 @@ export default async function Artifact({ params }: { params: Params }) {
           <BlackWhiteList
             blacklist={blacklist}
             whitelist={whitelist}
-            module="artifacts"
+            module="collections"
             id={id}
           />
         </div>
