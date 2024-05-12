@@ -7,7 +7,7 @@ type Params = {
   id: string;
 };
 
-const getArtifactById = async (id: string) => {
+export const getArtifactById = async (id: string) => {
   const res = await fetch(`${process.env.BASE_URL}/api/artifacts/${id}`, {
     next: { revalidate: 0 },
   });
