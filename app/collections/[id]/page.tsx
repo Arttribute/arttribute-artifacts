@@ -3,13 +3,12 @@ import ImageGrid from "@/components/ImageGrid";
 import { Separator } from "@/components/ui/separator";
 import { artifacts } from "@/lib/dummy";
 import { mapLicense } from "@/lib/utils";
-import Image from "next/image";
 
 type Params = {
   id: string;
 };
 
-const getCollectionById = async (id: string) => {
+export const getCollectionById = async (id: string) => {
   const res = await fetch(`${process.env.BASE_URL}/api/collections/${id}`, {
     next: { revalidate: 0 },
   });

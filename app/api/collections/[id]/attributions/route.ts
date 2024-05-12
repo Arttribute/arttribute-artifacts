@@ -4,7 +4,7 @@ type Params = {
   id: string;
 };
 
-// To attribute an artifact
+// To attribute a collection
 export async function POST(request: Request, { params }: { params: Params }) {
   const { id } = params;
 
