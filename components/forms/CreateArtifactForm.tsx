@@ -13,8 +13,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { artifacts } from "@/lib/dummy";
 import SelectLicenseFormItem from "./SelectLicenseFormItem";
+import { fileToBase64 } from "@/lib/utils";
 
 const MAX_FILE_SIZE = 5000000;
 
@@ -52,26 +52,27 @@ const CreateArtifactForm = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (!values.file) return;
-    console.log({
-      id: String(artifacts.length + 1),
-      creator: "0x1234",
-      image_url: URL.createObjectURL(values.file[0]),
-      artifact_hash: "1234",
-      license: values.license,
-      whitelist: [],
-      blacklist: [],
+
+    const fileAsBase64 = await fileToBase64(values.file[0]);
+
+    const res = await fetch("/api/artifacts", {
+      method: "POST",
+      body: JSON.stringify({
+        fileAsBase64,
+        license: values.license,
+      }),
     });
-    artifacts.push({
-      id: String(artifacts.length + 1),
-      creator: "0x1234",
-      image_url: URL.createObjectURL(values.file[0]),
-      artifact_hash: "1234",
-      license: values.license,
-      whitelist: [],
-      blacklist: [],
-    });
+
+    if (!res.ok) {
+      const { message } = await res.json();
+      console.error(message);
+      return;
+    }
+
+    const data = await res.json();
+    console.log(data);
   };
 
   return (
