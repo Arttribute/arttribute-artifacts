@@ -8,7 +8,8 @@ const getArtifacts = async () => {
   });
 
   if (!res.ok) {
-    throw new Error("Failed to fetch data");
+    const msg = await res.text();
+    throw new Error(msg);
   }
 
   return res.json();
@@ -33,7 +34,7 @@ export default async function Artifacts() {
             className="w-[32%] md:w-[24%] lg:w-[19%] xl:w-[16%] p-1 rounded-lg border-2 flex justify-center items-center hover:border-primary/50 transition-all duration-200 ease-in-out"
           >
             <Image
-              src={item.image_url}
+              src={item.imageUrl}
               alt="Vercel Logo"
               width={400}
               height={400}
