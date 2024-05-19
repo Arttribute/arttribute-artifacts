@@ -6,12 +6,15 @@ type LicenseType =
 
 type Artifact = {
   id: string;
-  creator: string; // web3address
-  image_url: string;
-  artifact_hash: string; // perceptual hash
+  name?: string;
+  creatorId: string; // web3address
+  imageUrl: string;
+  artifactHash: string; // perceptual hash
   license: LicenseType;
   whitelist: ListedUser[];
   blacklist: ListedUser[];
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 type Collection = {

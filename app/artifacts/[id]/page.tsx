@@ -13,7 +13,8 @@ export const getArtifactById = async (id: string) => {
   });
 
   if (!res.ok) {
-    throw new Error("Failed to fetch data");
+    const msg = await res.text();
+    throw new Error(msg);
   }
 
   return res.json();
@@ -22,8 +23,10 @@ export const getArtifactById = async (id: string) => {
 export default async function Artifact({ params }: { params: Params }) {
   const { id } = params;
 
-  const { creator, image_url, license, whitelist, blacklist }: Artifact =
-    await getArtifactById(id);
+  const artifact = await getArtifactById(id);
+
+  const { creatorId, imageUrl, license, whitelist, blacklist }: Artifact =
+    artifact.data;
 
   return (
     <div className="container p-6 space-y-2 w-full lg:pt-12 lg:pl-20">
@@ -32,7 +35,7 @@ export default async function Artifact({ params }: { params: Params }) {
           {/* p-0.5 border-2 rounded-lg */}
           <Separator orientation="vertical" className="h-full w-[1px]" />
           <Image
-            src={image_url}
+            src={imageUrl}
             alt="artifact"
             width={400}
             height={400}
@@ -41,9 +44,7 @@ export default async function Artifact({ params }: { params: Params }) {
           <Separator orientation="vertical" className="h-full w-[1px]" />
         </div>
         <div className="space-y-2">
-          <h4 className="font-bold">
-            Arttribute {mapLicense(license)} License
-          </h4>
+          <h4 className="font-bold">Arttribute {license} License</h4>
           <p className="font-extralight text-sm">X Attributions</p>{" "}
           {/* TODO: maybe got by join? */}
           <BlackWhiteList
