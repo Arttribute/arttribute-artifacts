@@ -49,15 +49,15 @@ export async function POST(request: Request) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "x-authentication-address": "",
+        "x-authentication-message": "",
+        "x-authentication-signature": "", // TODO: fetch these somehow
       },
       body: JSON.stringify({
         asset: {
           data: fileAsBase64,
         },
         license: mapLicense(license as LicenseType),
-        imageUrl: null,
-        whitelist: [],
-        blacklist: [],
         name: "Random Name", // TODO: confirm this isn't necessary
       }),
     });
