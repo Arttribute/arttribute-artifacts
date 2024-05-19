@@ -13,7 +13,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { collections } from "@/lib/dummy";
 import SelectLicenseFormItem from "./SelectLicenseFormItem";
 import { useRouter } from "next/navigation";
 
@@ -34,9 +33,23 @@ const CreateArtifactForm = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
-    router.push("/collections/create/1"); //TODO: use actual ID
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const res = await fetch("/api/collections", {
+      method: "POST",
+      body: JSON.stringify({
+        collectionName: values.collectionName,
+        license: values.license,
+      }),
+    });
+
+    if (!res.ok) {
+      const { message } = await res.json();
+      console.error(message);
+      return;
+    }
+    const { data } = await res.json();
+    console.log(data);
+    router.push(`/collections/create/${data.id}`); //TODO: use actual ID
   };
 
   return (
