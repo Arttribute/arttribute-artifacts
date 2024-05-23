@@ -20,7 +20,7 @@ export default async function AttributeArtifact({
   return (
     <div className="container p-6 space-y-4 w-full flex flex-col items-center text-center">
       <h1 className="text-2xl font-bold">Make Attribution</h1>
-      <ImageGrid images={Array(5).fill(artifacts[0].image_url)} />
+      <ImageGrid images={Array(5).fill(artifacts[0].imageUrl)} />
       <div className="space-y-3">
         <div className="">
           <h4 className="text-sm">By {creator}</h4>

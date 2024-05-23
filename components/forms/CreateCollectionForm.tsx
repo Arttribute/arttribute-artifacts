@@ -49,7 +49,7 @@ const CreateArtifactForm = () => {
     }
     const { data } = await res.json();
     console.log(data);
-    router.push(`/collections/create/${data.id}`); //TODO: use actual ID
+    router.push(`/collections/create/${data.id}`);
   };
 
   return (

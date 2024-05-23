@@ -1,22 +1,8 @@
+import { getArtifacts } from "@/app/artifacts/page";
 import AddArtifactsToCollection from "@/components/forms/AddArtifactsToCollection";
 
 type Params = {
   id: string;
-};
-
-const getArtifactsByUser = async (web3Address: string) => {
-  const res = await fetch(
-    `${process.env.BASE_URL}/api/users/${web3Address}/artifacts`,
-    {
-      next: { revalidate: 0 },
-    }
-  );
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  return res.json();
 };
 
 export default async function AddArtifactToCollection({
@@ -26,7 +12,7 @@ export default async function AddArtifactToCollection({
 }) {
   const { id } = params;
 
-  const artifactsByUser: Artifact[] = await getArtifactsByUser("0x1234");
+  const artifactsByUser: Artifact[] = await getArtifacts();
 
   return (
     <div className="container p-6 space-y-2 w-full lg:pt-12 lg:pl-20">

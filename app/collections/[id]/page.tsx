@@ -34,7 +34,7 @@ export default async function Collection({ params }: { params: Params }) {
         <div className="mx-auto md:m-0 flex justify-center items-center gap-2">
           {/* p-0.5 border-2 rounded-lg */}
           <Separator orientation="vertical" className="h-full w-[1px]" />
-          <ImageGrid images={Array(5).fill(artifacts[0].image_url)} />{" "}
+          <ImageGrid images={Array(5).fill(artifacts[0].imageUrl)} />{" "}
           {/* TODO: replace this */}
           <Separator orientation="vertical" className="h-full w-[1px]" />
         </div>

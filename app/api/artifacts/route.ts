@@ -28,7 +28,7 @@ export async function GET() {
     });
   }
 
-  const artifacts = await res.json();
+  const { data: artifacts } = await res.json();
 
   if (!artifacts) {
     return new NextResponse("No artifacts found for this user", {

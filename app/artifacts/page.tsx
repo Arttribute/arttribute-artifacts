@@ -2,8 +2,9 @@ import { buttonVariants } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 
-const getArtifacts = async () => {
+export const getArtifacts = async () => {
   const res = await fetch(`${process.env.BASE_URL}/api/artifacts`, {
+    method: "GET",
     next: { revalidate: 0 },
   });
 

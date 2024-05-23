@@ -38,7 +38,18 @@ const AddArtifactsToCollection = ({
     },
   });
 
-  const onSubmit = (data: z.infer<typeof FormSchema>) => {
+  const onSubmit = async ({ artifacts }: z.infer<typeof FormSchema>) => {
+    const res = await fetch(`/api/collections/${collectionId}`, {
+      method: "POST",
+      body: JSON.stringify(artifacts),
+    });
+
+    if (!res.ok) {
+      const { message } = await res.json();
+      console.error(message);
+      return;
+    }
+    const data = await res.json();
     console.log(data);
   };
 
@@ -88,8 +99,8 @@ const AddArtifactsToCollection = ({
                               />
                             </FormControl>
                             <Image
-                              src={artifact.image_url}
-                              alt={artifact.id}
+                              src={artifact.imageUrl}
+                              alt="image of artifact"
                               width={400}
                               height={400}
                               className="object-cover rounded-lg aspect-square"
