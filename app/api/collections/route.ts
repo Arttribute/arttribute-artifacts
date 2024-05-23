@@ -1,4 +1,3 @@
-import { collections } from "@/lib/dummy";
 import { mapLicense } from "@/lib/utils";
 import { NextResponse } from "next/server";
 
@@ -8,7 +7,35 @@ type CollectionInput = {
 };
 
 export async function GET() {
-  // TODO: replace with real data
+  // TODO: replace with real user
+  const res = await fetch(
+    `${process.env.API_URL}/users/0x7d7008e282ed898a991a3777ee91ef0d50e09aa0/collections`
+  );
+
+  if (!res.ok) {
+    if (res.status === 404) {
+      return new NextResponse("No collections found for this user", {
+        status: 404,
+      });
+    }
+    if (res.status === 401) {
+      return new NextResponse("Unauthorized", {
+        status: 401,
+      });
+    }
+    return new NextResponse("Failed to fetch", {
+      status: res.status,
+    });
+  }
+
+  const { data: collections } = await res.json();
+
+  if (!collections) {
+    return new NextResponse("No collections found for this user", {
+      status: 404,
+    });
+  }
+
   return new NextResponse(JSON.stringify(collections), {
     status: 200,
   });

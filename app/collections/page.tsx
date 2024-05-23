@@ -39,7 +39,7 @@ export default async function Collections() {
         <TableHeader>
           <TableRow>
             <TableHead>Collection Name</TableHead>
-            <TableHead>Artifacts</TableHead>{" "}
+            <TableHead>Artifacts</TableHead>
             {/* TODO: Count of artifacts in collection */}
             <TableHead>Attributions</TableHead>
             <TableHead className="text-right">Created</TableHead>
@@ -48,11 +48,11 @@ export default async function Collections() {
         <TableBody>
           {collections.map((collection) => (
             <TableRow key={collection.id}>
-              <TableCell>{collection.name}</TableCell>
+              <TableCell>{collection.name ?? "Untitled"}</TableCell>
               <TableCell>{10}</TableCell>
               <TableCell>{100}</TableCell>
               <TableCell className="text-right">
-                {formatDate(collection.created_at)}
+                {formatDate(collection.createdAt)}
               </TableCell>
             </TableRow>
           ))}

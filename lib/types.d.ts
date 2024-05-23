@@ -19,12 +19,13 @@ type Artifact = {
 
 type Collection = {
   id: string;
-  creator: string; // web3address
+  creatorId: string; // web3address
   name: string;
   license: LicenseType;
   whitelist: ListedUser[];
   blacklist: ListedUser[];
-  created_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 type CollectionArtifact = {
