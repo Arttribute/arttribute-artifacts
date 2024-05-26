@@ -48,7 +48,9 @@ const AttributeButton = ({
   const makeAttribution = async (id: string) => {
     const res = await fetch(`/api/${purpose}/${id}/attributions`, {
       method: "POST",
-      body: JSON.stringify({ web3Address: "0x1234" }), // TODO: replace with logged in credentials
+      body: JSON.stringify({
+        web3Address: "0x7d7008e282ed898a991a3777ee91ef0d50e09aa0",
+      }), // TODO: replace with logged in credentials
     });
 
     if (!res.ok) {
