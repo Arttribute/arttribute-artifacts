@@ -39,7 +39,7 @@ const AddArtifactsToCollection = ({
   });
 
   const onSubmit = async ({ artifacts }: z.infer<typeof FormSchema>) => {
-    const res = await fetch(`/api/collections/${collectionId}`, {
+    const res = await fetch(`/api/collections/${collectionId}/items`, {
       method: "POST",
       body: JSON.stringify(artifacts),
     });
@@ -49,8 +49,9 @@ const AddArtifactsToCollection = ({
       console.error(message);
       return;
     }
-    const data = await res.json();
+    const { data } = await res.json();
     console.log(data);
+    // TODO: toast the user
   };
 
   return (
