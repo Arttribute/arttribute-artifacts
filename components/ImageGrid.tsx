@@ -1,19 +1,33 @@
-"use client";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-
-// FIXME: numCols not working as expected
 
 const ImageGrid = ({ images }: { images: string[] }) => {
   const numImg = images.length;
   const numCols = Math.ceil(Math.sqrt(numImg));
 
-  const gridClass = cn(`grid grid-cols-${numCols}`);
+  let gridClass;
+
+  switch (numCols) {
+    case 1:
+      gridClass = "grid-cols-1";
+      break;
+    case 2:
+      gridClass = "grid-cols-2";
+      break;
+    case 3:
+      gridClass = "grid-cols-3";
+      break;
+    case 4:
+      gridClass = "grid-cols-4";
+      break;
+    default:
+      gridClass = "grid-cols-5";
+  }
 
   return (
-    <div className={gridClass}>
+    <div className={cn(`grid ${gridClass} gap-2`)}>
       {images.map((image, index) => (
-        <div key={index} className="p-2">
+        <div key={index} className="border rounded-sm">
           <Image
             src={image}
             alt={`artifact ${index + 1}`}

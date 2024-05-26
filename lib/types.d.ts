@@ -28,10 +28,11 @@ type Collection = {
   updatedAt: Date;
 };
 
-type CollectionArtifact = {
-  id: string;
-  artifact_id: string;
-  collection_id: string;
+type CollectionItem = {
+  artifactId: string;
+  collectionId: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 type Attribution = {

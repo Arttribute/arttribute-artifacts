@@ -1,7 +1,6 @@
 import { mapLicense } from "@/lib/utils";
 import AttributeButton from "@/components/AttributeButton";
-import { getCollectionById } from "../page";
-import { artifacts } from "@/lib/dummy";
+import { getCollectionById, getCollectionItems } from "../page";
 import ImageGrid from "@/components/ImageGrid";
 
 type Params = {
@@ -15,12 +14,20 @@ export default async function AttributeArtifact({
 }) {
   const { id } = params;
 
-  const { creatorId, license }: Collection = await getCollectionById(id);
+  const collectionPromise: Promise<Collection> = getCollectionById(id);
+  const collectionItemsPromise: Promise<string[]> = getCollectionItems(id);
+
+  const [collection, artifactImages] = await Promise.all([
+    collectionPromise,
+    collectionItemsPromise,
+  ]);
+
+  const { creatorId, license }: Collection = collection;
 
   return (
     <div className="container p-6 space-y-4 w-full flex flex-col items-center text-center">
       <h1 className="text-2xl font-bold">Make Attribution</h1>
-      <ImageGrid images={Array(5).fill(artifacts[0].imageUrl)} />
+      <ImageGrid images={artifactImages} />
       <div className="space-y-3">
         <div className="">
           <h4 className="text-sm">By {creatorId ?? "Anonymous"}</h4>

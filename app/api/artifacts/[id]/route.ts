@@ -1,4 +1,3 @@
-import { artifacts } from "@/lib/dummy";
 import { NextResponse } from "next/server";
 
 type Params = {
