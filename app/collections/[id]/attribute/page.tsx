@@ -15,7 +15,7 @@ export default async function AttributeArtifact({
 }) {
   const { id } = params;
 
-  const { creator, license }: Collection = await getCollectionById(id);
+  const { creatorId, license }: Collection = await getCollectionById(id);
 
   return (
     <div className="container p-6 space-y-4 w-full flex flex-col items-center text-center">
@@ -23,7 +23,7 @@ export default async function AttributeArtifact({
       <ImageGrid images={Array(5).fill(artifacts[0].imageUrl)} />
       <div className="space-y-3">
         <div className="">
-          <h4 className="text-sm">By {creator}</h4>
+          <h4 className="text-sm">By {creatorId ?? "Anonymous"}</h4>
           <h4 className="text-sm font-bold">
             Arttribute {mapLicense(license)} License
           </h4>

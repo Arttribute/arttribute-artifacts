@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ChevronRight } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
@@ -53,6 +54,18 @@ export default async function Collections() {
               <TableCell>{100}</TableCell>
               <TableCell className="text-right">
                 {formatDate(collection.createdAt)}
+              </TableCell>
+              <TableCell className="text-right">
+                <Link
+                  href={`/collections/${collection.id}`}
+                  className={buttonVariants({
+                    variant: "outline",
+                    size: "icon",
+                    className: "h-6 w-6",
+                  })}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Link>
               </TableCell>
             </TableRow>
           ))}
