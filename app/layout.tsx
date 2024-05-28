@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/react";
 import Header from "@/components/layout/Header";
 import SideDrawer from "@/components/layout/SideDrawer";
 import { Separator } from "@/components/ui/separator";
+import MagicProvider from "@/components/providers/MagicProvider";
 
 const chakra_petch = Chakra_Petch({
   weight: ["300", "400", "500", "700"],
@@ -26,17 +27,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={chakra_petch.className}>
-        <Header />
-        <div className="flex">
-          <div className="h-full w-3/5 md:w-2/5 lg:w-1/5 rounded-none p-6 hidden lg:block">
-            <SideDrawer />
+        <MagicProvider>
+          <Header />
+          <div className="flex">
+            <div className="h-full w-3/5 md:w-2/5 lg:w-1/5 rounded-none p-6 hidden lg:block">
+              <SideDrawer />
+            </div>
+            <Separator
+              orientation="vertical"
+              className="min-h-[calc(100vh-4rem)] hidden lg:block w-[0.5px]"
+            />
+            {children}
           </div>
-          <Separator
-            orientation="vertical"
-            className="min-h-[calc(100vh-4rem)] hidden lg:block w-[0.5px]"
-          />
-          {children}
-        </div>
+        </MagicProvider>
 
         <Analytics />
       </body>
