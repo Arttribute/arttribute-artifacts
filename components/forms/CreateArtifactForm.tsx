@@ -15,6 +15,10 @@ import {
 import { Input } from "@/components/ui/input";
 import SelectLicenseFormItem from "./SelectLicenseFormItem";
 import { fileToBase64 } from "@/lib/utils";
+import { useMagicContext } from "../providers/MagicProvider";
+import { useAuth } from "../providers/AuthProvider";
+import { signMessage } from "@/lib/sign";
+import { fetchMessage } from "@/lib/fetchers";
 
 const MAX_FILE_SIZE = 5000000;
 
@@ -43,6 +47,9 @@ const formSchema = z.object({
 });
 
 const CreateArtifactForm = () => {
+  const { web3 } = useMagicContext();
+  const { account } = useAuth();
+
   // TODO: use state for displaying preview
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -55,6 +62,13 @@ const CreateArtifactForm = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (!values.file) return;
 
+    const message: string | null = await fetchMessage(account);
+    const signedMessage: string | null = await signMessage(
+      web3,
+      account,
+      message
+    );
+
     const fileAsBase64 = await fileToBase64(values.file[0]);
 
     const res = await fetch("/api/artifacts", {
@@ -62,6 +76,11 @@ const CreateArtifactForm = () => {
       body: JSON.stringify({
         fileAsBase64,
         license: values.license,
+        authHeaders: {
+          address: account,
+          message,
+          signature: signedMessage,
+        } as AuthHeaders,
       }),
     });
 

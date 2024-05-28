@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 type ArtifactInput = {
   fileAsBase64: string;
   license: string;
+  authHeaders: AuthHeaders;
 };
 
 export async function GET() {
@@ -42,16 +43,25 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const { fileAsBase64, license }: ArtifactInput = await request.json();
+  const { fileAsBase64, license, authHeaders }: ArtifactInput =
+    await request.json();
+
+  const { address, message, signature } = authHeaders;
+
+  if (!address || !message || !signature) {
+    return new NextResponse("Please provide authentication headers.", {
+      status: 400,
+    });
+  }
 
   try {
     const res = await fetch(`${process.env.API_URL}/artifacts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-authentication-address": "",
-        "x-authentication-message": "",
-        "x-authentication-signature": "", // TODO: fetch these somehow
+        "x-authentication-address": address,
+        "x-authentication-message": message,
+        "x-authentication-signature": signature,
       },
       body: JSON.stringify({
         asset: {

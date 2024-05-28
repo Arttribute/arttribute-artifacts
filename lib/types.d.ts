@@ -48,3 +48,9 @@ type ListedUser = {
   id: string;
   date_added: Date;
 };
+
+type AuthHeaders = {
+  address: string | null;
+  message: string | null;
+  signature: string | null;
+};
