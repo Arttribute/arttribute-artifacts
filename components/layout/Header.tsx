@@ -3,14 +3,10 @@ import { useEffect, useState } from "react";
 import AuthButton from "../AuthButton";
 import { Logo } from "../branding/logo";
 import SideDrawer from "./SideDrawer";
+import { useAuth } from "../providers/AuthProvider";
 
 const Header = () => {
-  const [account, setAccount] = useState<string | null>(null);
-
-  useEffect(() => {
-    const user = localStorage.getItem("user");
-    setAccount(user);
-  }, [account]);
+  const { account } = useAuth();
 
   return (
     <nav className="w-full border-b border-b-foreground/10 h-16">
@@ -18,10 +14,7 @@ const Header = () => {
         <SideDrawer isSmallScreen />
         <Logo text="Arttribute" />
         {account && <p className="text-sm text-foreground">{account}</p>}
-        <AuthButton
-          action={account ? "Disconnect" : "Connect"}
-          setAccount={setAccount}
-        />
+        <AuthButton action={account ? "Disconnect" : "Connect"} />
       </div>
     </nav>
   );

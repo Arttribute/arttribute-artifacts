@@ -4,7 +4,7 @@ import { Magic } from "magic-sdk";
 import { getChainId, getNetworkUrl } from "@/lib/networks";
 const { Web3 } = require("web3");
 
-export type MagicContextType = {
+type MagicContextType = {
   magic: Magic | null;
   web3: typeof Web3 | null;
 };
@@ -14,7 +14,13 @@ const MagicContext = createContext<MagicContextType>({
   web3: null,
 });
 
-export const useMagicContext = () => useContext(MagicContext);
+export const useMagicContext = (): MagicContextType => {
+  const context = useContext(MagicContext);
+  if (context === null) {
+    throw new Error("useMagicContext must be used within a MagicProvider");
+  }
+  return context;
+};
 
 const MagicProvider = ({ children }: { children: React.ReactNode }) => {
   const [magicInstance, setMagicInstance] = useState<Magic | null>(null);

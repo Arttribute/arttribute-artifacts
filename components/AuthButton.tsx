@@ -2,15 +2,16 @@ import { useCallback, useState } from "react";
 import { Button } from "./ui/button";
 import { Loader2 } from "lucide-react";
 import { useMagicContext } from "./providers/MagicProvider";
+import { useAuth } from "./providers/AuthProvider";
 
 interface Props {
   action: "Connect" | "Disconnect";
-  setAccount: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const AuthButton = ({ action, setAccount }: Props) => {
+const AuthButton = ({ action }: Props) => {
   const [disabled, setDisabled] = useState(false);
   const { magic } = useMagicContext();
+  const { setAccount } = useAuth();
 
   const connect = useCallback(async () => {
     if (!magic) return;
