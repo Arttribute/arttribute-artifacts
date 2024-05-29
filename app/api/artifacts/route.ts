@@ -1,5 +1,5 @@
 import { mapLicense } from "@/lib/utils";
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 type ArtifactInput = {
   fileAsBase64: string;
@@ -7,11 +7,17 @@ type ArtifactInput = {
   authHeaders: AuthHeaders;
 };
 
-export async function GET() {
-  // TODO: replace with real user
-  const res = await fetch(
-    `${process.env.API_URL}/users/0x7d7008e282ed898a991a3777ee91ef0d50e09aa0/artifacts`
-  );
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const address = searchParams.get("uid");
+
+  if (!address) {
+    return new NextResponse("Please provide a valid address", {
+      status: 400,
+    });
+  }
+
+  const res = await fetch(`${process.env.API_URL}/users/${address}/artifacts`);
 
   if (!res.ok) {
     if (res.status === 404) {

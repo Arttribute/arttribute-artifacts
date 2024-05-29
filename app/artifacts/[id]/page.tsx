@@ -1,6 +1,5 @@
 import BlackWhiteList from "@/components/artifacts/BlackWhiteList";
 import { Separator } from "@/components/ui/separator";
-import { mapLicense } from "@/lib/utils";
 import Image from "next/image";
 
 type Params = {

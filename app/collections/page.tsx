@@ -1,3 +1,4 @@
+"use client";
 import {
   Table,
   TableBody,
@@ -11,21 +12,16 @@ import { ChevronRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { formatDate } from "@/lib/utils";
+import { useAuth } from "@/components/providers/AuthProvider";
+import { useCollections } from "@/lib/fetchers";
 
-const getCollections = async () => {
-  const res = await fetch(`${process.env.BASE_URL}/api/collections`, {
-    next: { revalidate: 0 },
-  });
+export default function Collections() {
+  const { account } = useAuth();
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
+  const { collections, isLoading, error } = useCollections(account);
 
-  return res.json();
-};
-
-export default async function Collections() {
-  const collections: Collection[] = await getCollections();
+  if (isLoading) return <h1>Loading...</h1>;
+  if (error) return <h1>Error: {error}</h1>;
 
   return (
     <div className="container p-6 space-y-2 w-full">

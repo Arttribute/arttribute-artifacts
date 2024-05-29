@@ -20,8 +20,8 @@ const AuthButton = ({ action }: Props) => {
       const accounts = await magic.wallet.connectWithUI();
       setDisabled(false);
       console.log("Logged in user:", accounts[0]);
-      localStorage.setItem("user", accounts[0]);
-      setAccount(accounts[0]);
+      localStorage.setItem("user", accounts[0].toLowerCase());
+      setAccount(accounts[0].toLowerCase());
     } catch (error) {
       setDisabled(false);
       console.error(error);

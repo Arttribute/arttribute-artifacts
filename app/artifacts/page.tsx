@@ -1,23 +1,17 @@
+"use client";
+import { useAuth } from "@/components/providers/AuthProvider";
 import { buttonVariants } from "@/components/ui/button";
+import { useArtifacts } from "@/lib/fetchers";
 import Image from "next/image";
 import Link from "next/link";
 
-export const getArtifacts = async () => {
-  const res = await fetch(`${process.env.BASE_URL}/api/artifacts`, {
-    method: "GET",
-    next: { revalidate: 0 },
-  });
+export default function Artifacts() {
+  const { account } = useAuth();
 
-  if (!res.ok) {
-    const msg = await res.text();
-    throw new Error(msg);
-  }
+  const { artifacts, isLoading, error } = useArtifacts(account);
 
-  return res.json();
-};
-
-export default async function Artifacts() {
-  const artifacts: Artifact[] = await getArtifacts();
+  if (isLoading) return <h1>Loading...</h1>;
+  if (error) return <h1>Error: {error}</h1>;
 
   return (
     <div className="container p-6 space-y-2 w-full">
