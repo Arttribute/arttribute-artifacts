@@ -23,6 +23,8 @@ import { useMagicContext } from "../providers/MagicProvider";
 import { useAuth } from "../providers/AuthProvider";
 import { useToast } from "../ui/use-toast";
 import { useRouter } from "next/navigation";
+import LoadingButton from "../LoadingButton";
+import { useState } from "react";
 
 const FormSchema = z.object({
   artifacts: z.array(z.string()).refine((value) => value.some((item) => item), {
@@ -41,6 +43,8 @@ const AddArtifactsToCollection = ({
   const { web3 } = useMagicContext();
   const { account } = useAuth();
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -49,6 +53,7 @@ const AddArtifactsToCollection = ({
   });
 
   const onSubmit = async ({ artifacts }: z.infer<typeof FormSchema>) => {
+    setIsLoading(true);
     const message: string | null = await fetchMessage(account);
     const signedMessage: string | null = await signMessage(
       web3,
@@ -76,6 +81,7 @@ const AddArtifactsToCollection = ({
         title: "Something went wrong!",
         description: message,
       });
+      setIsLoading(false);
       return;
     }
     const { data } = await res.json();
@@ -84,6 +90,7 @@ const AddArtifactsToCollection = ({
       title: "Success!",
       description: "Artifacts added to collection!",
     });
+    setIsLoading(false);
     router.replace(`/collections/${collectionId}`);
   };
 
@@ -151,7 +158,9 @@ const AddArtifactsToCollection = ({
             </FormItem>
           )}
         />
-        <Button type="submit">Add Artifacts To Collection</Button>
+        <LoadingButton type="submit" isLoading={isLoading}>
+          Add Artifacts To Collection
+        </LoadingButton>
       </form>
     </Form>
   );

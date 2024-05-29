@@ -20,6 +20,9 @@ import { useAuth } from "../providers/AuthProvider";
 import { signMessage } from "@/lib/sign";
 import { fetchMessage } from "@/lib/fetchers";
 import { useToast } from "../ui/use-toast";
+import LoadingButton from "../LoadingButton";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const MAX_FILE_SIZE = 5000000;
 
@@ -51,6 +54,8 @@ const CreateArtifactForm = () => {
   const { web3 } = useMagicContext();
   const { account } = useAuth();
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   // TODO: use state for displaying preview
 
@@ -63,6 +68,8 @@ const CreateArtifactForm = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     if (!values.file) return;
+
+    setIsLoading(true);
 
     const message: string | null = await fetchMessage(account);
     const signedMessage: string | null = await signMessage(
@@ -94,6 +101,7 @@ const CreateArtifactForm = () => {
         title: "Something went wrong!",
         description: message,
       });
+      setIsLoading(false);
       return;
     }
 
@@ -103,6 +111,8 @@ const CreateArtifactForm = () => {
       title: "Success!",
       description: "Artifact created!",
     });
+    setIsLoading(false);
+    router.replace(`/artifacts/${data.id}`);
   };
 
   return (
@@ -140,7 +150,9 @@ const CreateArtifactForm = () => {
             />
           )}
         />
-        <Button type="submit">Submit</Button>
+        <LoadingButton type="submit" isLoading={isLoading}>
+          Create Artifact
+        </LoadingButton>
       </form>
     </Form>
   );

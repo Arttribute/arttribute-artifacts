@@ -20,6 +20,8 @@ import { useMagicContext } from "../providers/MagicProvider";
 import { fetchMessage } from "@/lib/fetchers";
 import { signMessage } from "@/lib/sign";
 import { useToast } from "../ui/use-toast";
+import LoadingButton from "../LoadingButton";
+import { useState } from "react";
 
 const formSchema = z.object({
   collectionName: z.string().min(3).max(50),
@@ -33,6 +35,7 @@ const CreateArtifactForm = () => {
   const { web3 } = useMagicContext();
   const { account } = useAuth();
   const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -43,6 +46,7 @@ const CreateArtifactForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsLoading(true);
     const message: string | null = await fetchMessage(account);
     const signedMessage: string | null = await signMessage(
       web3,
@@ -71,6 +75,7 @@ const CreateArtifactForm = () => {
         title: "Something went wrong!",
         description: message,
       });
+      setIsLoading(false);
       return;
     }
     const { data } = await res.json();
@@ -79,7 +84,8 @@ const CreateArtifactForm = () => {
       title: "Success!",
       description: "Collection created! Now add your artifacts to it.",
     });
-    router.push(`/collections/create/${data.id}`);
+    setIsLoading(false);
+    router.replace(`/collections/create/${data.id}`);
   };
 
   return (
@@ -111,7 +117,9 @@ const CreateArtifactForm = () => {
             />
           )}
         />
-        <Button type="submit">Submit</Button>
+        <LoadingButton type="submit" isLoading={isLoading}>
+          Create Collection
+        </LoadingButton>
       </form>
     </Form>
   );
