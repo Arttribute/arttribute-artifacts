@@ -1,48 +1,11 @@
-import { getArtifactById } from "@/app/artifacts/[id]/page";
 import BlackWhiteList from "@/components/artifacts/BlackWhiteList";
 import ImageGrid from "@/components/ImageGrid";
 import { Separator } from "@/components/ui/separator";
+import { getCollectionById, getCollectionItems } from "@/lib/fetchers-server";
 import { mapLicense } from "@/lib/utils";
 
 type Params = {
   id: string;
-};
-
-export const getCollectionById = async (id: string) => {
-  const res = await fetch(`${process.env.BASE_URL}/api/collections/${id}`, {
-    next: { revalidate: 0 },
-  });
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  return res.json();
-};
-
-export const getCollectionItems = async (id: string) => {
-  const res = await fetch(
-    `${process.env.BASE_URL}/api/collections/${id}/items`,
-    {
-      next: { revalidate: 0 },
-    }
-  );
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-
-  const { data: collectionItems } = await res.json();
-
-  const artifactImages = await Promise.all(
-    collectionItems.map(async (item: CollectionItem) => {
-      const artifact = await getArtifactById(item.artifactId);
-
-      return artifact.data.imageUrl;
-    })
-  );
-
-  return artifactImages;
 };
 
 export default async function Collection({ params }: { params: Params }) {

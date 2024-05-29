@@ -1,22 +1,10 @@
 import BlackWhiteList from "@/components/artifacts/BlackWhiteList";
 import { Separator } from "@/components/ui/separator";
+import { getArtifactById } from "@/lib/fetchers-server";
 import Image from "next/image";
 
 type Params = {
   id: string;
-};
-
-export const getArtifactById = async (id: string) => {
-  const res = await fetch(`${process.env.BASE_URL}/api/artifacts/${id}`, {
-    next: { revalidate: 0 },
-  });
-
-  if (!res.ok) {
-    const msg = await res.text();
-    throw new Error(msg);
-  }
-
-  return res.json();
 };
 
 export default async function Artifact({ params }: { params: Params }) {

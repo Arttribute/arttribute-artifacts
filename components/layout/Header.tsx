@@ -12,7 +12,7 @@ const Header = () => {
     <nav className="w-full border-b border-b-foreground/10 h-16">
       <div className="w-full container p-3 flex justify-between items-center">
         <SideDrawer isSmallScreen />
-        <Logo text="Arttribute" />
+        <Logo text="Arttribute Artifacts" />
         {account && <p className="text-sm text-foreground">{account}</p>}
         <AuthButton action={account ? "Disconnect" : "Connect"} />
       </div>

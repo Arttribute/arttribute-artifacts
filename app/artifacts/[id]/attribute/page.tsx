@@ -1,7 +1,7 @@
 import { mapLicense } from "@/lib/utils";
 import Image from "next/image";
-import { getArtifactById } from "../page";
 import AttributeButton from "@/components/AttributeButton";
+import { getArtifactById } from "@/lib/fetchers-server";
 
 type Params = {
   id: string;

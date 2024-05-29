@@ -1,7 +1,7 @@
 import { mapLicense } from "@/lib/utils";
 import AttributeButton from "@/components/AttributeButton";
-import { getCollectionById, getCollectionItems } from "../page";
 import ImageGrid from "@/components/ImageGrid";
+import { getCollectionById, getCollectionItems } from "@/lib/fetchers-server";
 
 type Params = {
   id: string;
