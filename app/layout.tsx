@@ -7,6 +7,7 @@ import SideDrawer from "@/components/layout/SideDrawer";
 import { Separator } from "@/components/ui/separator";
 import MagicProvider from "@/components/providers/MagicProvider";
 import AuthProvider from "@/components/providers/AuthProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 const chakra_petch = Chakra_Petch({
   weight: ["300", "400", "500", "700"],
@@ -43,7 +44,7 @@ export default function RootLayout({
             </div>
           </AuthProvider>
         </MagicProvider>
-
+        <Toaster />
         <Analytics />
       </body>
     </html>

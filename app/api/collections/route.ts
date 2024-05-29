@@ -1,15 +1,23 @@
 import { mapLicense } from "@/lib/utils";
-import { NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 type CollectionInput = {
   collectionName: string;
   license: LicenseType;
+  authHeaders: AuthHeaders;
 };
 
-export async function GET() {
-  // TODO: replace with real user
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const address = searchParams.get("uid");
+
+  if (!address) {
+    return new NextResponse("Please provide a valid address", {
+      status: 400,
+    });
+  }
   const res = await fetch(
-    `${process.env.API_URL}/users/0x7d7008e282ed898a991a3777ee91ef0d50e09aa0/collections`
+    `${process.env.API_URL}/users/${address}/collections`
   );
 
   if (!res.ok) {
@@ -42,10 +50,19 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const { collectionName, license }: CollectionInput = await request.json();
+  const { collectionName, license, authHeaders }: CollectionInput =
+    await request.json();
 
   if (!collectionName || !license) {
     return new NextResponse("Please provide a collection name and a license.", {
+      status: 400,
+    });
+  }
+
+  const { address, message, signature } = authHeaders;
+
+  if (!address || !message || !signature) {
+    return new NextResponse("Please provide authentication headers.", {
       status: 400,
     });
   }
@@ -55,9 +72,9 @@ export async function POST(request: Request) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-authentication-address": "",
-        "x-authentication-message": "",
-        "x-authentication-signature": "", // TODO: add real auth headers
+        "x-authentication-address": address,
+        "x-authentication-message": message,
+        "x-authentication-signature": signature,
       },
       body: JSON.stringify({
         name: collectionName,

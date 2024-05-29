@@ -15,6 +15,11 @@ import {
 import { Input } from "@/components/ui/input";
 import SelectLicenseFormItem from "./SelectLicenseFormItem";
 import { useRouter } from "next/navigation";
+import { useAuth } from "../providers/AuthProvider";
+import { useMagicContext } from "../providers/MagicProvider";
+import { fetchMessage } from "@/lib/fetchers";
+import { signMessage } from "@/lib/sign";
+import { useToast } from "../ui/use-toast";
 
 const formSchema = z.object({
   collectionName: z.string().min(3).max(50),
@@ -25,6 +30,10 @@ const formSchema = z.object({
 });
 
 const CreateArtifactForm = () => {
+  const { web3 } = useMagicContext();
+  const { account } = useAuth();
+  const { toast } = useToast();
+
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,21 +43,42 @@ const CreateArtifactForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const message: string | null = await fetchMessage(account);
+    const signedMessage: string | null = await signMessage(
+      web3,
+      account,
+      message
+    );
+
     const res = await fetch("/api/collections", {
       method: "POST",
       body: JSON.stringify({
         collectionName: values.collectionName,
         license: values.license,
+        authHeaders: {
+          address: account,
+          message,
+          signature: signedMessage,
+        } as AuthHeaders,
       }),
     });
 
     if (!res.ok) {
       const { message } = await res.json();
       console.error(message);
+      toast({
+        variant: "destructive",
+        title: "Something went wrong!",
+        description: message,
+      });
       return;
     }
     const { data } = await res.json();
     console.log(data);
+    toast({
+      title: "Success!",
+      description: "Collection created! Now add your artifacts to it.",
+    });
     router.push(`/collections/create/${data.id}`);
   };
 

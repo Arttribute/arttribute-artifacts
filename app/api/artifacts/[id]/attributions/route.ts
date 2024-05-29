@@ -5,26 +5,33 @@ type Params = {
 };
 
 type ArtifactInput = {
-  web3Address: string;
+  authHeaders: AuthHeaders;
 };
 
 // To attribute an artifact
 export async function POST(request: Request, { params }: { params: Params }) {
   const { id } = params;
 
-  const { web3Address }: ArtifactInput = await request.json();
+  const { authHeaders }: ArtifactInput = await request.json();
+
+  const { address, message, signature } = authHeaders;
+
+  if (!address || !message || !signature) {
+    return new NextResponse("Please provide authentication headers.", {
+      status: 400,
+    });
+  }
 
   try {
     const res = await fetch(`${process.env.API_URL}/attributions`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-authentication-address": "", // this dictates the attributorId
-        "x-authentication-message": "",
-        "x-authentication-signature": "", // TODO: fetch these somehow
+        "x-authentication-address": address,
+        "x-authentication-message": message,
+        "x-authentication-signature": signature,
       },
       body: JSON.stringify({
-        attributorId: web3Address, // FIXME: doesnt work
         artifactId: id,
       }),
     });

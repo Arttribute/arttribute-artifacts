@@ -19,6 +19,7 @@ import { useMagicContext } from "../providers/MagicProvider";
 import { useAuth } from "../providers/AuthProvider";
 import { signMessage } from "@/lib/sign";
 import { fetchMessage } from "@/lib/fetchers";
+import { useToast } from "../ui/use-toast";
 
 const MAX_FILE_SIZE = 5000000;
 
@@ -49,6 +50,7 @@ const formSchema = z.object({
 const CreateArtifactForm = () => {
   const { web3 } = useMagicContext();
   const { account } = useAuth();
+  const { toast } = useToast();
 
   // TODO: use state for displaying preview
 
@@ -87,11 +89,20 @@ const CreateArtifactForm = () => {
     if (!res.ok) {
       const { message } = await res.json();
       console.error(message);
+      toast({
+        variant: "destructive",
+        title: "Something went wrong!",
+        description: message,
+      });
       return;
     }
 
     const { data } = await res.json();
     console.log(data);
+    toast({
+      title: "Success!",
+      description: "Artifact created!",
+    });
   };
 
   return (

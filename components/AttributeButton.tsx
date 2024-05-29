@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -23,6 +24,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState } from "react";
 import LoadingButton from "./LoadingButton";
+import { useAuth } from "./providers/AuthProvider";
+import { useMagicContext } from "./providers/MagicProvider";
+import { fetchMessage } from "@/lib/fetchers";
+import { signMessage } from "@/lib/sign";
+import { useToast } from "./ui/use-toast";
 
 const formSchema = z.object({
   amount: z.number(),
@@ -37,6 +43,10 @@ const AttributeButton = ({
   purpose: "collections" | "artifacts";
   id: string;
 }) => {
+  const { account } = useAuth();
+  const { web3 } = useMagicContext();
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -46,15 +56,27 @@ const AttributeButton = ({
   });
 
   const makeAttribution = async (id: string) => {
+    const message: string | null = await fetchMessage(account);
+    const signedMessage: string | null = await signMessage(
+      web3,
+      account,
+      message
+    );
+
     const res = await fetch(`/api/${purpose}/${id}/attributions`, {
       method: "POST",
       body: JSON.stringify({
-        web3Address: "0x7d7008e282ed898a991a3777ee91ef0d50e09aa0",
-      }), // TODO: replace with logged in credentials
+        authHeaders: {
+          address: account,
+          message,
+          signature: signedMessage,
+        } as AuthHeaders,
+      }),
     });
 
     if (!res.ok) {
-      throw new Error("Failed to fetch data");
+      const { message } = await res.json();
+      throw new Error(message);
     }
 
     return res.json();
@@ -77,13 +99,21 @@ const AttributeButton = ({
       }
       const data = await makeAttribution(id);
       console.log(data);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      toast({
+        variant: "destructive",
+        title: "Something went wrong!",
+        description: error.toString(),
+      });
     } finally {
       setIsLoadingAttribution(false);
       setIsLoadingDonation(false);
+      toast({
+        title: "Success!",
+        description: "Attribution created!",
+      });
     }
-    console.log(values);
   };
 
   const [amount, setAmount] = useState(form.getValues("amount"));
@@ -134,24 +164,28 @@ const AttributeButton = ({
               </p>
             </div>
             <div className="flex flex-col space-y-1">
-              <LoadingButton
-                type="submit"
-                className="w-full"
-                isLoading={isLoadingDonation}
-                onClick={() => form.setValue("donateFlag", true)}
-              >
-                Show your support and make attribution
-              </LoadingButton>
-              <LoadingButton
-                variant="ghost"
-                type="submit"
-                className="w-full space-x-1"
-                isLoading={isLoadingAttribution}
-                onClick={() => form.setValue("donateFlag", false)}
-              >
-                <span>Skip and make attribution</span>
-                <SquareArrowOutUpRight className="h-4 w-4" />
-              </LoadingButton>
+              <DialogClose>
+                <LoadingButton
+                  type="submit"
+                  className="w-full"
+                  isLoading={isLoadingDonation}
+                  onClick={() => form.setValue("donateFlag", true)}
+                >
+                  Show your support and make attribution
+                </LoadingButton>
+              </DialogClose>
+              <DialogClose>
+                <LoadingButton
+                  variant="ghost"
+                  type="submit"
+                  className="w-full space-x-1"
+                  isLoading={isLoadingAttribution}
+                  onClick={() => form.setValue("donateFlag", false)}
+                >
+                  <span>Skip and make attribution</span>
+                  <SquareArrowOutUpRight className="h-4 w-4" />
+                </LoadingButton>
+              </DialogClose>
             </div>
           </form>
         </Form>

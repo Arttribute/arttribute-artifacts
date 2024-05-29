@@ -17,6 +17,12 @@ import {
 } from "@/components/ui/form";
 import Image from "next/image";
 import { ScrollArea } from "../ui/scroll-area";
+import { fetchMessage } from "@/lib/fetchers";
+import { signMessage } from "@/lib/sign";
+import { useMagicContext } from "../providers/MagicProvider";
+import { useAuth } from "../providers/AuthProvider";
+import { useToast } from "../ui/use-toast";
+import { useRouter } from "next/navigation";
 
 const FormSchema = z.object({
   artifacts: z.array(z.string()).refine((value) => value.some((item) => item), {
@@ -31,6 +37,10 @@ const AddArtifactsToCollection = ({
   collectionId: string;
   artifacts: Artifact[];
 }) => {
+  const router = useRouter();
+  const { web3 } = useMagicContext();
+  const { account } = useAuth();
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -39,19 +49,42 @@ const AddArtifactsToCollection = ({
   });
 
   const onSubmit = async ({ artifacts }: z.infer<typeof FormSchema>) => {
+    const message: string | null = await fetchMessage(account);
+    const signedMessage: string | null = await signMessage(
+      web3,
+      account,
+      message
+    );
+
     const res = await fetch(`/api/collections/${collectionId}/items`, {
       method: "POST",
-      body: JSON.stringify(artifacts),
+      body: JSON.stringify({
+        items: artifacts,
+        authHeaders: {
+          address: account,
+          message,
+          signature: signedMessage,
+        } as AuthHeaders,
+      }),
     });
 
     if (!res.ok) {
       const { message } = await res.json();
       console.error(message);
+      toast({
+        variant: "destructive",
+        title: "Something went wrong!",
+        description: message,
+      });
       return;
     }
     const { data } = await res.json();
     console.log(data);
-    // TODO: toast the user
+    toast({
+      title: "Success!",
+      description: "Artifacts added to collection!",
+    });
+    router.replace(`/collections/${collectionId}`);
   };
 
   return (
