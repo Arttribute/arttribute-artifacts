@@ -99,6 +99,10 @@ const AttributeButton = ({
       }
       const data = await makeAttribution(id);
       console.log(data);
+      toast({
+        title: "Success!",
+        description: "Attribution created!",
+      });
     } catch (error: any) {
       console.error(error);
       toast({
@@ -109,10 +113,6 @@ const AttributeButton = ({
     } finally {
       setIsLoadingAttribution(false);
       setIsLoadingDonation(false);
-      toast({
-        title: "Success!",
-        description: "Attribution created!",
-      });
     }
   };
 
