@@ -16,11 +16,18 @@ export const fetchMessage = async (account: string | null) => {
   return message;
 };
 
-const fetcher = (url: string) =>
-  fetch(url, {
-    method: "GET",
-    next: { revalidate: 0 },
-  }).then((res) => res.json());
+const fetcher = async (url: string) => {
+  const res = await fetch(url, { next: { revalidate: 0 } });
+
+  if (!res.ok) {
+    const msg = await res.text();
+    const error = new Error(msg);
+    console.error(error);
+    throw error;
+  }
+
+  return res.json();
+};
 
 export const useArtifacts = (web3Address: string | null) => {
   const { data, error, isLoading } = useSWR(
@@ -29,9 +36,9 @@ export const useArtifacts = (web3Address: string | null) => {
   );
 
   return {
-    artifacts: data as Artifact[],
+    artifacts: data as Artifact[] | undefined,
     isLoading,
-    error,
+    error: error as Error | undefined,
   };
 };
 
@@ -42,8 +49,8 @@ export const useCollections = (web3Address: string | null) => {
   );
 
   return {
-    collections: data as Collection[],
+    collections: data as Collection[] | undefined,
     isLoading,
-    error,
+    error: error as Error | undefined,
   };
 };

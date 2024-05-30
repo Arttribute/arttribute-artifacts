@@ -1,5 +1,6 @@
 "use client";
 import AddArtifactsToCollection from "@/components/forms/AddArtifactsToCollection";
+import NotFound from "@/components/NotFound";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { useArtifacts } from "@/lib/fetchers";
 
@@ -18,11 +19,19 @@ export default function AddArtifactToCollection({
   const { artifacts, isLoading, error } = useArtifacts(account);
 
   if (isLoading) return <h1>Loading...</h1>;
-  if (error) return <h1>Error: {error}</h1>;
+  if (error) {
+    let message = error.message;
+    if (!account) message += ". Possible fix: Please login to view this page";
+    throw new Error(message);
+  }
 
   return (
     <div className="container p-6 space-y-2 w-full lg:pt-12 lg:pl-20">
-      <AddArtifactsToCollection collectionId={id} artifacts={artifacts} />
+      {artifacts ? (
+        <AddArtifactsToCollection collectionId={id} artifacts={artifacts} />
+      ) : (
+        <NotFound resource="artifact" />
+      )}
     </div>
   );
 }

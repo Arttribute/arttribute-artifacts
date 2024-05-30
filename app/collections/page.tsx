@@ -14,6 +14,7 @@ import Link from "next/link";
 import { formatDate } from "@/lib/utils";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { useCollections } from "@/lib/fetchers";
+import NotFound from "@/components/NotFound";
 
 export default function Collections() {
   const { account } = useAuth();
@@ -21,7 +22,11 @@ export default function Collections() {
   const { collections, isLoading, error } = useCollections(account);
 
   if (isLoading) return <h1>Loading...</h1>;
-  if (error) return <h1>Error: {error}</h1>;
+  if (error) {
+    let message = error.message;
+    if (!account) message += ". Possible fix: Please login to view this page";
+    throw new Error(message);
+  }
 
   return (
     <div className="container p-6 space-y-2 w-full">
@@ -43,28 +48,32 @@ export default function Collections() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {collections.map((collection) => (
-            <TableRow key={collection.id}>
-              <TableCell>{collection.name ?? "Untitled"}</TableCell>
-              <TableCell>{10}</TableCell>
-              <TableCell>{100}</TableCell>
-              <TableCell className="text-right">
-                {formatDate(collection.createdAt)}
-              </TableCell>
-              <TableCell className="text-right">
-                <Link
-                  href={`/collections/${collection.id}`}
-                  className={buttonVariants({
-                    variant: "outline",
-                    size: "icon",
-                    className: "h-6 w-6",
-                  })}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Link>
-              </TableCell>
-            </TableRow>
-          ))}
+          {collections && collections.length > 0 ? (
+            collections.map((collection) => (
+              <TableRow key={collection.id}>
+                <TableCell>{collection.name ?? "Untitled"}</TableCell>
+                <TableCell>{10}</TableCell>
+                <TableCell>{100}</TableCell>
+                <TableCell className="text-right">
+                  {formatDate(collection.createdAt)}
+                </TableCell>
+                <TableCell className="text-right">
+                  <Link
+                    href={`/collections/${collection.id}`}
+                    className={buttonVariants({
+                      variant: "outline",
+                      size: "icon",
+                      className: "h-6 w-6",
+                    })}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Link>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <NotFound resource="collection" />
+          )}
         </TableBody>
       </Table>
     </div>

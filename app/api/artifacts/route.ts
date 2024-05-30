@@ -21,13 +21,18 @@ export async function GET(request: NextRequest) {
 
   if (!res.ok) {
     if (res.status === 404) {
-      return new NextResponse("No artifacts found for this user", {
+      return new NextResponse("This user does not exist", {
         status: 404,
-      });
+      }); // TODO: from API return this route
     }
     if (res.status === 401) {
       return new NextResponse("Unauthorized", {
         status: 401,
+      });
+    }
+    if (res.status === 400) {
+      return new NextResponse("Bad Request", {
+        status: 400,
       });
     }
     return new NextResponse("Failed to fetch", {

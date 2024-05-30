@@ -20,7 +20,8 @@ export const getCollectionById = async (collection_id: string) => {
   );
 
   if (!res.ok) {
-    throw new Error("Failed to fetch data");
+    const msg = await res.text();
+    throw new Error(msg);
   }
 
   return res.json();
@@ -35,7 +36,8 @@ export const getCollectionItems = async (collection_id: string) => {
   );
 
   if (!res.ok) {
-    throw new Error("Failed to fetch data");
+    const msg = await res.text();
+    throw new Error(msg);
   }
 
   const { data: collectionItems } = await res.json();
