@@ -5,13 +5,7 @@ import BlackWhiteList from "@/components/artifacts/BlackWhiteList";
 import Link from "next/link";
 import { buttonVariants } from "../ui/button";
 
-const ArtifactDisplayOption = ({
-  artifact,
-  handleChangeList,
-}: {
-  artifact: Artifact;
-  handleChangeList: any;
-}) => {
+const ArtifactDisplayOption = ({ artifact }: { artifact: Artifact }) => {
   const { account } = useAuth();
   return account && account == artifact.creatorId ? (
     <BlackWhiteList
@@ -19,7 +13,6 @@ const ArtifactDisplayOption = ({
       whitelist={artifact.whitelist}
       module="artifacts"
       id={artifact.id}
-      handleChangeList={handleChangeList}
     />
   ) : (
     <Link

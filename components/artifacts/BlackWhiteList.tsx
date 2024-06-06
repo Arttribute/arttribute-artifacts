@@ -7,16 +7,9 @@ type Props = {
   whitelist: ListedUser[];
   module: "artifacts" | "collections";
   id: string;
-  handleChangeList: any;
 };
 
-const BlackWhiteList = ({
-  blacklist,
-  whitelist,
-  module,
-  id,
-  handleChangeList,
-}: Props) => {
+const BlackWhiteList = ({ blacklist, whitelist, module, id }: Props) => {
   return (
     <Tabs defaultValue="blacklist" className="w-[400px]">
       <TabsList className="w-full">
@@ -28,20 +21,10 @@ const BlackWhiteList = ({
         </TabsTrigger>
       </TabsList>
       <TabsContent value="blacklist">
-        <Listed
-          columns={columns}
-          data={addresses}
-          directive="black"
-          handleChangeList={handleChangeList}
-        />
+        <Listed id={id} columns={columns} data={addresses} directive="black" />
       </TabsContent>
       <TabsContent value="whitelist">
-        <Listed
-          columns={columns}
-          data={addresses}
-          directive="white"
-          handleChangeList={handleChangeList}
-        />
+        <Listed id={id} columns={columns} data={addresses} directive="white" />
       </TabsContent>
     </Tabs>
   );

@@ -24,16 +24,13 @@ import {
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
 import { formatDate } from "@/lib/utils";
+import { handleChangeBlackWhiteList } from "@/app/actions/actions";
 
 interface DataTableProps<TData, TValue> {
+  id: string;
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   directive: "black" | "white";
-  handleChangeList: (
-    directive: "black" | "white",
-    list: ListedUser[],
-    action: "add" | "remove"
-  ) => Promise<any>;
 }
 
 export const columns: ColumnDef<ListedUser>[] = [
@@ -76,10 +73,10 @@ export const columns: ColumnDef<ListedUser>[] = [
 ];
 
 function Listed<TData, TValue>({
+  id,
   columns,
   data,
   directive,
-  handleChangeList,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [rowSelection, setRowSelection] = useState({});
@@ -102,7 +99,8 @@ function Listed<TData, TValue>({
       .getFilteredSelectedRowModel()
       .rows.map((row) => row.original);
 
-    const info = await handleChangeList(
+    const info = await handleChangeBlackWhiteList(
+      id,
       directive,
       data as ListedUser[],
       action
