@@ -75,8 +75,14 @@ const AttributeButton = ({
     });
 
     if (!res.ok) {
-      const { message } = await res.json();
-      throw new Error(message);
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const { message } = await res.json();
+        throw new Error(message);
+      } else {
+        const text = await res.text();
+        throw new Error(text);
+      }
     }
 
     return res.json();
@@ -164,7 +170,7 @@ const AttributeButton = ({
               </p>
             </div>
             <div className="flex flex-col space-y-1">
-              <DialogClose>
+              <DialogClose asChild>
                 <LoadingButton
                   type="submit"
                   className="w-full"
@@ -174,7 +180,7 @@ const AttributeButton = ({
                   Show your support and make attribution
                 </LoadingButton>
               </DialogClose>
-              <DialogClose>
+              <DialogClose asChild>
                 <LoadingButton
                   variant="ghost"
                   type="submit"
