@@ -7,28 +7,16 @@ type Props = {
   whitelist: ListedUser[];
   module: "artifacts" | "collections";
   id: string;
+  handleChangeList: any;
 };
 
-const BlackWhiteList = ({ blacklist, whitelist, module, id }: Props) => {
-  const handleChangeList = async (
-    directive: "black" | "white",
-    list: ListedUser[],
-    action: "add" | "remove"
-  ) => {
-    "use server";
-    const res = await fetch(
-      `${process.env.BASE_URL}/api/${module}/${id}/${directive}list`,
-      {
-        method: "PUT",
-        body: JSON.stringify({ list, action }),
-      }
-    );
-    if (!res.ok) {
-      throw new Error("Failed to update list");
-    }
-
-    return res.json();
-  };
+const BlackWhiteList = ({
+  blacklist,
+  whitelist,
+  module,
+  id,
+  handleChangeList,
+}: Props) => {
   return (
     <Tabs defaultValue="blacklist" className="w-[400px]">
       <TabsList className="w-full">

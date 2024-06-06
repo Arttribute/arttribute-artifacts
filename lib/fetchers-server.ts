@@ -1,3 +1,16 @@
+export const getArtifacts = async () => {
+  const res = await fetch(`${process.env.BASE_URL}/api/all/artifacts`, {
+    next: { revalidate: 0 },
+  });
+
+  if (!res.ok) {
+    const msg = await res.text();
+    throw new Error(msg);
+  }
+
+  return res.json();
+};
+
 export const getArtifactById = async (id: string) => {
   const res = await fetch(`${process.env.BASE_URL}/api/artifacts/${id}`, {
     next: { revalidate: 0 },

@@ -11,12 +11,12 @@ import Link from "next/link";
 
 const drawerItems = [
   {
-    title: "Artifacts",
+    title: "My Artifacts",
     link: "/artifacts",
     icon: <Boxes className="w-4 h-4" />,
   },
   {
-    title: "Collections",
+    title: "My Collections",
     link: "/collections",
     icon: <Library className="w-4 h-4" />,
   },

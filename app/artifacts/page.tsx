@@ -36,7 +36,7 @@ export default function Artifacts() {
             >
               <Image
                 src={item.imageUrl}
-                alt="Vercel Logo"
+                alt={item.name ?? "Artifact"}
                 width={400}
                 height={400}
                 className="object-cover rounded-lg aspect-square"
