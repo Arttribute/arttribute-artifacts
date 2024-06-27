@@ -34,9 +34,9 @@ export const CustomDrawerContent = ({
 }) => (
   <div className="space-y-6">
     {isSmallScreen && (
-      <div className="w-full flex justify-between">
+      <div className="w-full flex justify-between my-5">
         <Logo text="Arttibute" />
-        <DrawerClose asChild className="block lg:hidden">
+        <DrawerClose asChild className="lg:hidden">
           <Button size="icon" variant="ghost">
             <XIcon className="w-5 h-5" />
           </Button>
@@ -60,7 +60,7 @@ export const CustomDrawerContent = ({
 const SideDrawer = ({ isSmallScreen }: { isSmallScreen?: boolean }) => {
   return isSmallScreen ? (
     <Drawer direction="left">
-      <DrawerTrigger asChild className="block lg:hidden">
+      <DrawerTrigger asChild className="lg:hidden">
         <Button size="icon" variant="outline">
           <Menu className="w-5 h-5" />
         </Button>

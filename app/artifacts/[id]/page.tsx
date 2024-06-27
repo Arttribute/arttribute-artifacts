@@ -17,7 +17,7 @@ export default async function Artifact({ params }: { params: Params }) {
 
   return (
     <div className="container p-6 space-y-2 w-full lg:pt-12 lg:pl-20">
-      <div className="flex gap-6 flex-col md:flex-row">
+      <div className="flex gap-6 flex-col text-center md:flex-row md:text-left">
         <div className="mx-auto md:m-0 flex justify-center items-center gap-2">
           {/* p-0.5 border-2 rounded-lg */}
           <Separator orientation="vertical" className="h-full w-[1px]" />
