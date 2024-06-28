@@ -1,3 +1,4 @@
+import Tester from "@/components/Tester";
 import { getArtifacts } from "@/lib/fetchers-server";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,6 +8,7 @@ export default async function Home() {
     const artifacts: Artifact[] = await getArtifacts();
     return (
       <div className="container p-6 flex flex-wrap gap-2 w-full">
+        <Tester />
         {artifacts && artifacts.length > 0 ? (
           artifacts.map((item) => (
             <Link
