@@ -13,7 +13,9 @@ const Header = () => {
       <div className="w-full container p-3 flex justify-between items-center">
         <SideDrawer isSmallScreen />
         <Logo text="Arttribute Artifacts" />
-        {account && <p className="text-sm text-foreground">{account}</p>}
+        {account && (
+          <p className="text-sm text-foreground hidden md:flex">{account}</p>
+        )}
         <AuthButton action={account ? "Disconnect" : "Connect"} />
       </div>
     </nav>
