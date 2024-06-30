@@ -1,15 +1,19 @@
 "use client";
 import NotFound from "@/components/NotFound";
 import { useAuth } from "@/components/providers/AuthProvider";
+import { useMinipay } from "@/components/providers/MinipayProvider";
 import { buttonVariants } from "@/components/ui/button";
 import { useArtifacts } from "@/lib/fetchers";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Artifacts() {
+  const { minipay } = useMinipay();
   const { account } = useAuth();
 
-  const { artifacts, isLoading, error } = useArtifacts(account);
+  const web3Address = minipay ? minipay.address : account;
+
+  const { artifacts, isLoading, error } = useArtifacts(web3Address);
 
   if (isLoading) return <h1>Loading...</h1>;
   if (error) {

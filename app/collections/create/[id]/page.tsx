@@ -2,6 +2,7 @@
 import AddArtifactsToCollection from "@/components/forms/AddArtifactsToCollection";
 import NotFound from "@/components/NotFound";
 import { useAuth } from "@/components/providers/AuthProvider";
+import { useMinipay } from "@/components/providers/MinipayProvider";
 import { useArtifacts } from "@/lib/fetchers";
 
 type Params = {
@@ -14,9 +15,12 @@ export default function AddArtifactToCollection({
   params: Params;
 }) {
   const { id } = params;
+  const { minipay } = useMinipay();
   const { account } = useAuth();
 
-  const { artifacts, isLoading, error } = useArtifacts(account);
+  const web3Address = minipay ? minipay.address : account;
+
+  const { artifacts, isLoading, error } = useArtifacts(web3Address);
 
   if (isLoading) return <h1>Loading...</h1>;
   if (error) {
