@@ -22,6 +22,7 @@ import { signMessage } from "@/lib/sign";
 import { useToast } from "../ui/use-toast";
 import LoadingButton from "../LoadingButton";
 import { useState } from "react";
+import { useMinipay } from "../providers/MinipayProvider";
 
 const formSchema = z.object({
   collectionName: z.string().min(3).max(50),
@@ -34,8 +35,11 @@ const formSchema = z.object({
 const CreateArtifactForm = () => {
   const { web3 } = useMagicContext();
   const { account } = useAuth();
+  const { minipay } = useMinipay();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+
+  const web3Address = minipay ? minipay.address : account;
 
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -47,10 +51,10 @@ const CreateArtifactForm = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
-    const message: string | null = await fetchMessage(account);
+    const message: string | null = await fetchMessage(web3Address);
     const signedMessage: string | null = await signMessage(
       web3,
-      account,
+      web3Address,
       message
     );
 
@@ -60,7 +64,7 @@ const CreateArtifactForm = () => {
         collectionName: values.collectionName,
         license: values.license,
         authHeaders: {
-          address: account,
+          address: web3Address,
           message,
           signature: signedMessage,
         } as AuthHeaders,

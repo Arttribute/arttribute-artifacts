@@ -23,6 +23,7 @@ import { useToast } from "../ui/use-toast";
 import LoadingButton from "../LoadingButton";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useMinipay } from "../providers/MinipayProvider";
 
 const MAX_FILE_SIZE = 5000000;
 
@@ -53,9 +54,12 @@ const formSchema = z.object({
 const CreateArtifactForm = () => {
   const { web3 } = useMagicContext();
   const { account } = useAuth();
+  const { minipay } = useMinipay();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  const web3Address = minipay ? minipay.address : account;
 
   // TODO: use state for displaying preview
 
@@ -71,10 +75,10 @@ const CreateArtifactForm = () => {
 
     setIsLoading(true);
 
-    const message: string | null = await fetchMessage(account);
+    const message: string | null = await fetchMessage(web3Address);
     const signedMessage: string | null = await signMessage(
       web3,
-      account,
+      web3Address,
       message
     );
 
@@ -86,7 +90,7 @@ const CreateArtifactForm = () => {
         fileAsBase64,
         license: values.license,
         authHeaders: {
-          address: account,
+          address: web3Address,
           message,
           signature: signedMessage,
         } as AuthHeaders,

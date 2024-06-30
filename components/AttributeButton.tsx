@@ -29,6 +29,7 @@ import { useMagicContext } from "./providers/MagicProvider";
 import { fetchMessage } from "@/lib/fetchers";
 import { signMessage } from "@/lib/sign";
 import { useToast } from "./ui/use-toast";
+import { useMinipay } from "./providers/MinipayProvider";
 
 const formSchema = z.object({
   amount: z.number(),
@@ -45,7 +46,10 @@ const AttributeButton = ({
 }) => {
   const { account } = useAuth();
   const { web3 } = useMagicContext();
+  const { minipay } = useMinipay();
   const { toast } = useToast();
+
+  const web3Address = minipay ? minipay.address : account;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -56,10 +60,10 @@ const AttributeButton = ({
   });
 
   const makeAttribution = async (id: string) => {
-    const message: string | null = await fetchMessage(account);
+    const message: string | null = await fetchMessage(web3Address);
     const signedMessage: string | null = await signMessage(
       web3,
-      account,
+      web3Address,
       message
     );
 
@@ -67,7 +71,7 @@ const AttributeButton = ({
       method: "POST",
       body: JSON.stringify({
         authHeaders: {
-          address: account,
+          address: web3Address,
           message,
           signature: signedMessage,
         } as AuthHeaders,
