@@ -26,6 +26,7 @@ import { useRouter } from "next/navigation";
 import LoadingButton from "../LoadingButton";
 import { useState } from "react";
 import { useMinipay } from "../providers/MinipayProvider";
+import { signMinipayMessage } from "@/lib/minipay";
 
 const FormSchema = z.object({
   artifacts: z.array(z.string()).refine((value) => value.some((item) => item), {
@@ -59,11 +60,9 @@ const AddArtifactsToCollection = ({
   const onSubmit = async ({ artifacts }: z.infer<typeof FormSchema>) => {
     setIsLoading(true);
     const message: string | null = await fetchMessage(web3Address);
-    const signedMessage: string | null = await signMessage(
-      web3,
-      web3Address,
-      message
-    );
+    const signedMessage: string | null = Boolean(minipay)
+      ? await signMinipayMessage(message)
+      : await signMessage(web3, web3Address, message);
 
     const res = await fetch(`/api/collections/${collectionId}/items`, {
       method: "POST",

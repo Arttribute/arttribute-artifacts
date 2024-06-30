@@ -19,7 +19,8 @@ const MinipayProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const checkMinipay = async () => {
-      const address = await createMinipayClient();
+      const walletClient = createMinipayClient();
+      const [address] = await walletClient.getAddresses();
 
       const ethereum = (window as any)?.ethereum;
 

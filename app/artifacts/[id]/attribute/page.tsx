@@ -38,7 +38,11 @@ export default async function AttributeArtifact({
         <p className="font-extralight text-sm">
           Use art responsibly and support its creators
         </p>
-        <AttributeButton purpose="artifacts" id={id} />
+        <AttributeButton
+          purpose="artifacts"
+          id={id}
+          creatorAddress={creatorId}
+        />
       </div>
     </div>
   );

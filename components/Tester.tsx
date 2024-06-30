@@ -1,12 +1,9 @@
 "use client";
 
-import { useMinipay } from "./providers/MinipayProvider";
-
-const Tester = () => {
-  const { minipay } = useMinipay();
-  console.log(minipay);
-
-  return <pre>{JSON.stringify(minipay, null, 2)}</pre>;
+const Tester = ({ content }: { content: any }) => {
+  return (
+    <pre className="max-w-xs text-wrap">{JSON.stringify(content, null, 2)}</pre>
+  );
 };
 
 export default Tester;

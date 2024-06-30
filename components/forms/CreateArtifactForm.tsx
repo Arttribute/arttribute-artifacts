@@ -24,6 +24,7 @@ import LoadingButton from "../LoadingButton";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMinipay } from "../providers/MinipayProvider";
+import { signMinipayMessage } from "@/lib/minipay";
 
 const MAX_FILE_SIZE = 5000000;
 
@@ -76,11 +77,9 @@ const CreateArtifactForm = () => {
     setIsLoading(true);
 
     const message: string | null = await fetchMessage(web3Address);
-    const signedMessage: string | null = await signMessage(
-      web3,
-      web3Address,
-      message
-    );
+    const signedMessage: string | null = Boolean(minipay)
+      ? await signMinipayMessage(message)
+      : await signMessage(web3, web3Address, message);
 
     const fileAsBase64 = await fileToBase64(values.file[0]);
 

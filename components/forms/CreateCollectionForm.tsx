@@ -23,6 +23,7 @@ import { useToast } from "../ui/use-toast";
 import LoadingButton from "../LoadingButton";
 import { useState } from "react";
 import { useMinipay } from "../providers/MinipayProvider";
+import { signMinipayMessage } from "@/lib/minipay";
 
 const formSchema = z.object({
   collectionName: z.string().min(3).max(50),
@@ -52,11 +53,9 @@ const CreateArtifactForm = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     const message: string | null = await fetchMessage(web3Address);
-    const signedMessage: string | null = await signMessage(
-      web3,
-      web3Address,
-      message
-    );
+    const signedMessage: string | null = Boolean(minipay)
+      ? await signMinipayMessage(message)
+      : await signMessage(web3, web3Address, message);
 
     const res = await fetch("/api/collections", {
       method: "POST",
