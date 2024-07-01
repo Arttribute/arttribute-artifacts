@@ -36,7 +36,6 @@ import {
   requestTransfer,
   signMinipayMessage,
 } from "@/lib/minipay";
-import Tester from "./Tester";
 
 const formSchema = z.object({
   amount: z.string().min(1, { message: "Amount must be provided" }),
@@ -131,8 +130,6 @@ const AttributeButton = ({
     } as TransactionBody;
 
     const transactionRes = await requestTransfer(transactionBody);
-
-    setTesterContent(JSON.stringify(transactionRes));
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -153,7 +150,6 @@ const AttributeButton = ({
       });
     } catch (error: any) {
       console.error(error);
-      setTesterContent(error);
       toast({
         variant: "destructive",
         title: "Something went wrong!",
@@ -169,101 +165,96 @@ const AttributeButton = ({
   const [isLoadingDonation, setIsLoadingDonation] = useState(false);
   const [isLoadingAttribution, setIsLoadingAttribution] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [testerContent, setTesterContent] = useState<any>(null);
 
   return (
-    <>
-      <Tester content={testerContent} />
-      <Dialog>
-        <DialogTrigger asChild>
-          <LoadingButton
-            className="w-full"
-            isLoading={isLoading || isLoadingDonation || isLoadingAttribution}
-          >
-            Make Attribution
-          </LoadingButton>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-md text-center">
-          <DialogHeader>
-            <DialogTitle className="text-center">Show Your Support</DialogTitle>
-            <DialogDescription className="text-center">
-              Give a direct nod of support to the creator.
-            </DialogDescription>
-          </DialogHeader>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <FormField
-                control={form.control}
-                name="amount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Amount you wish to send</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        {...field}
-                        onChange={async (e) => {
-                          field.onChange(e.target.value);
-                          await handleEstimateGas(e.target.valueAsNumber || 0);
-                        }}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="text-xs">
-                <p>
-                  Estimated gas fees:{" "}
-                  {gasFees ? `${gasFees.toFixed(2)} cUSD` : "Calculating..."}
-                </p>
-                <p>
-                  Creator receives{" "}
-                  <span className="font-bold">
-                    {(
-                      parseFloat(form.getValues("amount") || "0") * 0.8 -
-                      (gasFees ?? 0)
-                    ).toFixed(2)}{" "}
-                    cUSD
-                  </span>
-                </p>
-                <p>
-                  Arttribute takes 20% to keep the lights on and support
-                  creators
-                </p>
-              </div>
-              <div className="flex flex-col space-y-1">
-                {creatorAddress && (
-                  <DialogClose asChild>
-                    <LoadingButton
-                      type="submit"
-                      className="w-full"
-                      isLoading={isLoading || isLoadingDonation}
-                      onClick={() => form.setValue("donateFlag", true)}
-                    >
-                      Show your support and make attribution
-                    </LoadingButton>
-                  </DialogClose>
-                )}
-
+    <Dialog>
+      <DialogTrigger asChild>
+        <LoadingButton
+          className="w-full"
+          isLoading={isLoading || isLoadingDonation || isLoadingAttribution}
+        >
+          Make Attribution
+        </LoadingButton>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md text-center">
+        <DialogHeader>
+          <DialogTitle className="text-center">Show Your Support</DialogTitle>
+          <DialogDescription className="text-center">
+            Give a direct nod of support to the creator.
+          </DialogDescription>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="amount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Amount you wish to send</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      {...field}
+                      onChange={async (e) => {
+                        field.onChange(e.target.value);
+                        await handleEstimateGas(e.target.valueAsNumber || 0);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="text-xs">
+              <p>
+                Estimated gas fees:{" "}
+                {gasFees ? `${gasFees.toFixed(2)} cUSD` : "Calculating..."}
+              </p>
+              <p>
+                Creator receives{" "}
+                <span className="font-bold">
+                  {(
+                    parseFloat(form.getValues("amount") || "0") * 0.8 -
+                    (gasFees ?? 0)
+                  ).toFixed(2)}{" "}
+                  cUSD
+                </span>
+              </p>
+              <p>
+                Arttribute takes 20% to keep the lights on and support creators
+              </p>
+            </div>
+            <div className="flex flex-col space-y-1">
+              {creatorAddress && (
                 <DialogClose asChild>
                   <LoadingButton
-                    variant="ghost"
                     type="submit"
-                    className="w-full space-x-1"
-                    isLoading={isLoading || isLoadingAttribution}
-                    onClick={() => form.setValue("donateFlag", false)}
+                    className="w-full"
+                    isLoading={isLoading || isLoadingDonation}
+                    onClick={() => form.setValue("donateFlag", true)}
                   >
-                    <span>Skip and make attribution</span>
-                    <SquareArrowOutUpRight className="h-4 w-4" />
+                    Show your support and make attribution
                   </LoadingButton>
                 </DialogClose>
-              </div>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
-    </>
+              )}
+
+              <DialogClose asChild>
+                <LoadingButton
+                  variant="ghost"
+                  type="submit"
+                  className="w-full space-x-1"
+                  isLoading={isLoading || isLoadingAttribution}
+                  onClick={() => form.setValue("donateFlag", false)}
+                >
+                  <span>Skip and make attribution</span>
+                  <SquareArrowOutUpRight className="h-4 w-4" />
+                </LoadingButton>
+              </DialogClose>
+            </div>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 };
 
