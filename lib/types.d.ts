@@ -61,3 +61,5 @@ type TransactionBody = {
   value: bigint;
   data?: `0x${string}`;
 };
+
+type Token = "cUSD" | "USDC" | "USDT";

@@ -11,10 +11,32 @@ import {
 import { celo, celoAlfajores, mainnet } from "viem/chains";
 import { stableTokenABI } from "@celo/abis";
 
-const MAINNET_STABLE_TOKEN_ADDRESS =
-  "0x765DE816845861e75A25fCA122bb6898B8B1282a";
-const TESTNET_STABLE_TOKEN_ADDRESS =
-  "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1";
+// Mainnet
+const MAINNET_CUSD_TOKEN_ADDRESS = "0x765DE816845861e75A25fCA122bb6898B8B1282a";
+const MAINNET_USDC_TOKEN_ADDRESS = "0xcebA9300f2b948710d2653dD7B07f33A8B32118C";
+const MAINNET_USDT_TOKEN_ADDRESS = "0x48065fbbe25f71c9282ddf5e1cd6d6a887483d5e";
+
+// Testnet
+const TESTNET_CUSD_TOKEN_ADDRESS = "0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1";
+const TESTNET_USDC_TOKEN_ADDRESS = "0xa6920Dd986896D5433b4f388FCB705947A6af835";
+const TESTNET_USDT_TOKEN_ADDRESS = "0x9Ae90C20aFCEDA659bDbC5F77A09f1A5771F140f";
+
+const getStableTokenAddress = (token: Token, isTestnet: boolean) => {
+  switch (token) {
+    case "cUSD":
+      return isTestnet
+        ? TESTNET_CUSD_TOKEN_ADDRESS
+        : MAINNET_CUSD_TOKEN_ADDRESS;
+    case "USDC":
+      return isTestnet
+        ? TESTNET_USDC_TOKEN_ADDRESS
+        : MAINNET_USDC_TOKEN_ADDRESS;
+    case "USDT":
+      return isTestnet
+        ? TESTNET_USDT_TOKEN_ADDRESS
+        : MAINNET_USDT_TOKEN_ADDRESS;
+  }
+};
 
 export const createMinipayClient = () => {
   const client = createWalletClient({
@@ -25,16 +47,25 @@ export const createMinipayClient = () => {
   return client;
 };
 
-const publicClient = createPublicClient({
-  chain: celo,
-  transport: http(),
-}); // Mainnet
+// const mainnetPublicClient = createPublicClient({
+//   chain: celo,
+//   transport: http(),
+// });
 
-export const checkCUSDBalance = async (address: string) => {
+const testnetPublicClient = createPublicClient({
+  chain: celoAlfajores,
+  transport: http(),
+});
+
+export const checkBalance = async (
+  address: string,
+  token: Token,
+  isTestnet = true
+) => {
   let StableTokenContract = getContract({
     abi: stableTokenABI,
-    address: MAINNET_STABLE_TOKEN_ADDRESS,
-    client: publicClient,
+    address: getStableTokenAddress(token, isTestnet),
+    client: testnetPublicClient,
   });
 
   let balanceInBigNumber = await StableTokenContract.read.balanceOf([
@@ -63,7 +94,7 @@ export const signMinipayMessage = async (message: string | null) => {
 };
 
 export const estimateGas = async (transaction: TransactionBody) => {
-  return await publicClient.estimateGas({ ...transaction });
+  return await testnetPublicClient.estimateGas({ ...transaction });
 };
 
 export const requestTransfer = async (
@@ -88,10 +119,6 @@ export const requestTransfer = async (
   let hash = await client.sendTransaction({
     account: transactionBody.account,
     to: transactionBody.to,
-    // to: '0x765DE816845861e75A25fCA122bb6898B8B1282a' // cUSD (Mainnet)
-    // to: '0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1' // cUSD (Testnet)
-    // to: '0xcebA9300f2b948710d2653dD7B07f33A8B32118C' // USDC (Mainnet)
-    // to: '0x48065fbbe25f71c9282ddf5e1cd6d6a887483d5e' // USDT (Mainnet)
     value: transactionBody.value,
     data: encodeFunctionData({
       abi: stableTokenABI,
@@ -107,7 +134,7 @@ export const requestTransfer = async (
     // chain: celo,
   });
 
-  const transaction = await publicClient.waitForTransactionReceipt({
+  const transaction = await testnetPublicClient.waitForTransactionReceipt({
     hash, // Transaction hash that can be used to search transaction on the explorer.
   });
 

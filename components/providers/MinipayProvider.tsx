@@ -1,5 +1,5 @@
 "use client";
-import { checkCUSDBalance, createMinipayClient } from "@/lib/minipay";
+import { checkBalance, createMinipayClient } from "@/lib/minipay";
 import { createContext, useContext, useEffect, useState } from "react";
 
 type MinipayProps = {
@@ -9,13 +9,16 @@ type MinipayProps = {
 
 type MinipayContextType = {
   minipay: MinipayProps | null;
+  currency: Token;
   setMinipay: (minipay: React.SetStateAction<MinipayProps | null>) => void;
+  setCurrency: (currency: React.SetStateAction<Token>) => void;
 };
 
 const MinipayContext = createContext<MinipayContextType | null>(null);
 
 const MinipayProvider = ({ children }: { children: React.ReactNode }) => {
   const [minipay, setMinipay] = useState<MinipayProps | null>(null);
+  const [currency, setCurrency] = useState<Token>("cUSD");
 
   useEffect(() => {
     const checkMinipay = async () => {
@@ -28,11 +31,11 @@ const MinipayProvider = ({ children }: { children: React.ReactNode }) => {
         // User has a injected wallet
         if (ethereum.isMiniPay) {
           // User is using Minipay
-          const balance = await checkCUSDBalance(address);
+          const balance = await checkBalance(address, currency); // This only returns the balance in cUSD
 
           setMinipay((prev) => ({
             ...prev,
-            address: address.toLowerCase(),
+            address,
             balance,
           }));
         } else {
@@ -42,10 +45,12 @@ const MinipayProvider = ({ children }: { children: React.ReactNode }) => {
       }
     };
     checkMinipay();
-  }, [minipay]);
+  }, [minipay, currency]);
 
   return (
-    <MinipayContext.Provider value={{ minipay, setMinipay }}>
+    <MinipayContext.Provider
+      value={{ minipay, currency, setMinipay, setCurrency }}
+    >
       {children}
     </MinipayContext.Provider>
   );
