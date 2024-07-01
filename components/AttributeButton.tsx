@@ -31,11 +31,15 @@ import { signMessage } from "@/lib/sign";
 import { useToast } from "./ui/use-toast";
 import { useMinipay } from "./providers/MinipayProvider";
 import { parseEther } from "viem";
-import { requestTransfer, signMinipayMessage } from "@/lib/minipay";
+import {
+  estimateGasFees,
+  requestTransfer,
+  signMinipayMessage,
+} from "@/lib/minipay";
 import Tester from "./Tester";
 
 const formSchema = z.object({
-  amount: z.number(),
+  amount: z.string().min(1, { message: "Amount must be provided" }),
   donateFlag: z.boolean(),
   // TODO: maybe add more currency options
 });
@@ -59,10 +63,23 @@ const AttributeButton = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      amount: 1,
+      amount: "0",
       donateFlag: false,
     },
   });
+
+  const handleEstimateGas = async (amount: number) => {
+    setIsLoading(true);
+    const transactionBody = {
+      account: minipay!.address,
+      to: creatorAddress!,
+      value: parseEther(`${amount}`),
+    } as TransactionBody;
+
+    const gasFees = await estimateGasFees(transactionBody);
+    setGasFees(parseFloat(gasFees));
+    setIsLoading(false);
+  };
 
   const makeAttribution = async (id: string) => {
     const message: string | null = await fetchMessage(web3Address);
@@ -122,7 +139,9 @@ const AttributeButton = ({
     try {
       if (values.donateFlag) {
         setIsLoadingDonation(true);
-        await makePayment(values.amount);
+        if (!values.amount) throw new Error("Amount is required");
+        const amount = parseFloat(values.amount);
+        await makePayment(amount);
       } else {
         setIsLoadingAttribution(true);
       }
@@ -146,7 +165,7 @@ const AttributeButton = ({
     }
   };
 
-  const [amount, setAmount] = useState(form.getValues("amount"));
+  const [gasFees, setGasFees] = useState<number | null>(null);
   const [isLoadingDonation, setIsLoadingDonation] = useState(false);
   const [isLoadingAttribution, setIsLoadingAttribution] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -178,9 +197,9 @@ const AttributeButton = ({
                       <Input
                         type="number"
                         {...field}
-                        onChange={(e) => {
-                          field.onChange(e.target.valueAsNumber || 0);
-                          setAmount(e.target.valueAsNumber || 0);
+                        onChange={async (e) => {
+                          field.onChange(e.target.value);
+                          await handleEstimateGas(e.target.valueAsNumber || 0);
                         }}
                       />
                     </FormControl>
@@ -190,9 +209,17 @@ const AttributeButton = ({
               />
               <div className="text-xs">
                 <p>
+                  Estimated gas fees:{" "}
+                  {gasFees ? `${gasFees.toFixed(2)} cUSD` : "Calculating..."}
+                </p>
+                <p>
                   Creator receives{" "}
                   <span className="font-bold">
-                    {(amount * 0.8).toFixed(2)} $
+                    {(
+                      parseFloat(form.getValues("amount") || "0") * 0.8 -
+                      (gasFees ?? 0)
+                    ).toFixed(2)}{" "}
+                    cUSD
                   </span>
                 </p>
                 <p>

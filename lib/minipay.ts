@@ -93,8 +93,24 @@ export const signMinipayMessage = async (message: string | null) => {
   return signature;
 };
 
-export const estimateGas = async (transaction: TransactionBody) => {
-  return await testnetPublicClient.estimateGas({ ...transaction });
+// returns the gas fees in cUSD
+export const estimateGasFees = async (
+  transaction: TransactionBody,
+  token: Token = "cUSD",
+  isTestnet = true
+) => {
+  const stableTokenAddress = getStableTokenAddress(token, isTestnet);
+
+  const gasLimit = await testnetPublicClient.estimateGas({
+    ...transaction,
+    feeCurrency: stableTokenAddress,
+  }); // returns the gas
+
+  const gasPrice = await testnetPublicClient.getGasPrice();
+
+  const gasFees = formatEther(gasLimit * gasPrice); // gas fees in cUSD
+
+  return gasFees;
 };
 
 export const requestTransfer = async (
