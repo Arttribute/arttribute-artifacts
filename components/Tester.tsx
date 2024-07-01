@@ -6,7 +6,7 @@ const Tester = ({ content }: { content?: any }) => {
   const { minipay, currency } = useMinipay();
   return (
     <pre className="max-w-xs text-wrap">
-      {JSON.stringify({ ...minipay, currency }, null, 2)}
+      {JSON.stringify({ ...minipay, currency, ...content }, null, 2)}
     </pre>
   );
 };

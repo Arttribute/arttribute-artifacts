@@ -132,7 +132,7 @@ const AttributeButton = ({
 
     const transactionRes = await requestTransfer(transactionBody);
 
-    setTesterContent(transactionRes);
+    setTesterContent(JSON.stringify(transactionRes));
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -176,7 +176,12 @@ const AttributeButton = ({
       <Tester content={testerContent} />
       <Dialog>
         <DialogTrigger asChild>
-          <Button className="w-full">Make Attribution</Button>
+          <LoadingButton
+            className="w-full"
+            isLoading={isLoading || isLoadingDonation || isLoadingAttribution}
+          >
+            Make Attribution
+          </LoadingButton>
         </DialogTrigger>
         <DialogContent className="sm:max-w-md text-center">
           <DialogHeader>
