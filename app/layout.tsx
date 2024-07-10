@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import MagicProvider from "@/components/providers/MagicProvider";
 import AuthProvider from "@/components/providers/AuthProvider";
 import { Toaster } from "@/components/ui/toaster";
+import MinipayProvider from "@/components/providers/MinipayProvider";
 
 const chakra_petch = Chakra_Petch({
   weight: ["300", "400", "500", "700"],
@@ -32,17 +33,19 @@ export default function RootLayout({
       <body className={chakra_petch.className}>
         <MagicProvider>
           <AuthProvider>
-            <Header />
-            <div className="flex">
-              <div className="h-full w-3/5 md:w-2/5 lg:w-1/5 rounded-none p-6 hidden lg:block">
-                <SideDrawer />
+            <MinipayProvider>
+              <Header />
+              <div className="flex">
+                <div className="h-full w-3/5 md:w-2/5 lg:w-1/5 rounded-none p-6 hidden lg:block">
+                  <SideDrawer />
+                </div>
+                <Separator
+                  orientation="vertical"
+                  className="min-h-[calc(100vh-4rem)] hidden lg:block w-[0.5px]"
+                />
+                {children}
               </div>
-              <Separator
-                orientation="vertical"
-                className="min-h-[calc(100vh-4rem)] hidden lg:block w-[0.5px]"
-              />
-              {children}
-            </div>
+            </MinipayProvider>
           </AuthProvider>
         </MagicProvider>
         <Toaster />

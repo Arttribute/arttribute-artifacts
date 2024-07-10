@@ -54,3 +54,12 @@ type AuthHeaders = {
   message: string | null;
   signature: string | null;
 };
+
+type TransactionBody = {
+  account: `0x${string}`;
+  to: `0x${string}`;
+  value: bigint;
+  data?: `0x${string}`;
+};
+
+type Token = "cUSD" | "USDC" | "USDT";

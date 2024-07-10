@@ -15,11 +15,15 @@ import { formatDate } from "@/lib/utils";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { useCollections } from "@/lib/fetchers";
 import NotFound from "@/components/NotFound";
+import { useMinipay } from "@/components/providers/MinipayProvider";
 
 export default function Collections() {
+  const { minipay } = useMinipay();
   const { account } = useAuth();
 
-  const { collections, isLoading, error } = useCollections(account);
+  const web3Address = minipay ? minipay.address : account;
+
+  const { collections, isLoading, error } = useCollections(web3Address);
 
   if (isLoading) return <h1>Loading...</h1>;
   if (error) {

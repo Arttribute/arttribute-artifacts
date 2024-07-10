@@ -12,7 +12,7 @@ export default async function Home() {
             <Link
               href={`/artifacts/${item.id}`}
               key={item.id}
-              className="w-[32%] md:w-[24%] lg:w-[19%] xl:w-[16%] p-1 rounded-lg border-2 flex justify-center items-center hover:border-primary/50 transition-all duration-200 ease-in-out"
+              className="w-[31%] md:w-[24%] lg:w-[19%] xl:w-[16%] p-1 rounded-lg border-2 flex justify-center items-center hover:border-primary/50 transition-all duration-200 ease-in-out"
             >
               <Image
                 src={item.imageUrl}

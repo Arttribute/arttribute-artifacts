@@ -22,6 +22,20 @@ export const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat("en-US").format(new Date(date));
 };
 
+export const formatNum = (count: number) => {
+  if (count < 1000) {
+    return count.toString(); // Return the count as is if it's less than 1000
+  } else if (count < 1000000) {
+    // For counts in thousands
+    const formattedCount = (count / 1000).toFixed(1);
+    return `${formattedCount}K`;
+  } else {
+    // For counts in millions
+    const formattedCount = (count / 1000000).toFixed(1);
+    return `${formattedCount}M`;
+  }
+};
+
 export const fileToBase64 = (file: File): Promise<string> => {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
