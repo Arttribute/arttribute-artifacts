@@ -41,19 +41,19 @@ export default function Collections() {
         </Link>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Collection Name</TableHead>
-            <TableHead>Artifacts</TableHead>
-            {/* TODO: Count of artifacts in collection */}
-            <TableHead>Attributions</TableHead>
-            <TableHead className="text-right">Created</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {collections && collections.length > 0 ? (
-            collections.map((collection) => (
+      {collections && collections.length > 0 ? (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Collection Name</TableHead>
+              <TableHead>Artifacts</TableHead>
+              {/* TODO: Count of artifacts in collection */}
+              <TableHead>Attributions</TableHead>
+              <TableHead className="text-right">Created</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {collections.map((collection) => (
               <TableRow key={collection.id}>
                 <TableCell>{collection.name ?? "Untitled"}</TableCell>
                 <TableCell>{10}</TableCell>
@@ -74,12 +74,14 @@ export default function Collections() {
                   </Link>
                 </TableCell>
               </TableRow>
-            ))
-          ) : (
-            <NotFound resource="collection" />
-          )}
-        </TableBody>
-      </Table>
+            ))}
+          </TableBody>
+        </Table>
+      ) : (
+        <div className="flex">
+          <NotFound resource="collection" />
+        </div>
+      )}
     </div>
   );
 }

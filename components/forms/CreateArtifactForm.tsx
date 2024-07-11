@@ -72,50 +72,61 @@ const CreateArtifactForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (!values.file) return;
-
     setIsLoading(true);
 
-    const message: string | null = await fetchMessage(web3Address);
-    const signedMessage: string | null = Boolean(minipay)
-      ? await signMinipayMessage(message)
-      : await signMessage(web3, web3Address, message);
+    try {
+      if (!values.file) throw new Error("Please select an image.");
+      if (values.file[0].size > MAX_FILE_SIZE)
+        throw new Error(`Max image size is 5MB.`);
 
-    const fileAsBase64 = await fileToBase64(values.file[0]);
+      if (!ACCEPTED_IMAGE_MIME_TYPES.includes(values.file[0].type))
+        throw new Error(
+          "Only .jpg, .jpeg, .png and .webp formats are supported."
+        );
 
-    const res = await fetch("/api/artifacts", {
-      method: "POST",
-      body: JSON.stringify({
-        fileAsBase64,
-        license: values.license,
-        authHeaders: {
-          address: web3Address,
-          message,
-          signature: signedMessage,
-        } as AuthHeaders,
-      }),
-    });
+      const message: string | null = await fetchMessage(web3Address);
+      const signedMessage: string | null = Boolean(minipay)
+        ? await signMinipayMessage(message)
+        : await signMessage(web3, web3Address, message);
 
-    if (!res.ok) {
-      const { message } = await res.json();
-      console.error(message);
+      const fileAsBase64 = await fileToBase64(values.file[0]);
+
+      const res = await fetch("/api/artifacts", {
+        method: "POST",
+        body: JSON.stringify({
+          fileAsBase64,
+          license: values.license,
+          authHeaders: {
+            address: web3Address,
+            message,
+            signature: signedMessage,
+          } as AuthHeaders,
+        }),
+      });
+
+      if (!res.ok) {
+        const { message } = await res.json();
+        throw new Error(message);
+      }
+
+      const { data } = await res.json();
+      console.log(data);
+      toast({
+        title: "Success!",
+        description: "Artifact created!",
+      });
+      router.replace(`/artifacts/${data.id}`);
+    } catch (error: any) {
+      const msg = error.toString();
+      console.error(msg);
       toast({
         variant: "destructive",
         title: "Something went wrong!",
-        description: message,
+        description: msg,
       });
+    } finally {
       setIsLoading(false);
-      return;
     }
-
-    const { data } = await res.json();
-    console.log(data);
-    toast({
-      title: "Success!",
-      description: "Artifact created!",
-    });
-    setIsLoading(false);
-    router.replace(`/artifacts/${data.id}`);
   };
 
   return (
