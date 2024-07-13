@@ -25,6 +25,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMinipay } from "../providers/MinipayProvider";
 import { signMinipayMessage } from "@/lib/minipay";
+import Image from "next/image";
+import { XIcon } from "lucide-react";
 
 const MAX_FILE_SIZE = 5000000;
 
@@ -61,8 +63,6 @@ const CreateArtifactForm = () => {
   const router = useRouter();
 
   const web3Address = minipay ? minipay.address : account;
-
-  // TODO: use state for displaying preview
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -138,17 +138,39 @@ const CreateArtifactForm = () => {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Image</FormLabel>
-              <FormControl>
-                <Input
-                  type="file"
-                  onBlur={field.onBlur}
-                  name={field.name}
-                  onChange={(e) => {
-                    field.onChange(e.target.files);
-                  }}
-                  ref={field.ref}
-                />
-              </FormControl>
+              <div className="flex items-center gap-2">
+                {field.value && (
+                  <div className="relative w-20 h-20 rounded-md border-2">
+                    <Image
+                      src={URL.createObjectURL(field.value[0])}
+                      alt="Artifact preview"
+                      fill={true}
+                      className="object-cover rounded-md"
+                    />
+                    <Button
+                      variant="destructive"
+                      size="icon"
+                      className="absolute top-0.5 right-0.5 w-6 h-6 rounded-full"
+                      onClick={() => {
+                        form.reset({ file: undefined });
+                      }}
+                    >
+                      <XIcon className="w-4 h-4" />
+                    </Button>
+                  </div>
+                )}
+                <FormControl>
+                  <Input
+                    type="file"
+                    onBlur={field.onBlur}
+                    name={field.name}
+                    onChange={(e) => {
+                      field.onChange(e.target.files);
+                    }}
+                    ref={field.ref}
+                  />
+                </FormControl>
+              </div>
               <FormDescription>This is the artifact image.</FormDescription>
               <FormMessage />
             </FormItem>
