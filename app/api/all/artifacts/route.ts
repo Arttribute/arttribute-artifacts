@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const res = await fetch(`${process.env.API_URL}/artifacts`);
+  const res = await fetch(`${process.env.API_URL}/artifacts`, {
+    next: { revalidate: 0 },
+  });
 
   if (!res.ok) {
     return new NextResponse("Failed to fetch", {
