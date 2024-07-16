@@ -26,7 +26,7 @@ import { useRouter } from "next/navigation";
 import { useMinipay } from "../providers/MinipayProvider";
 import { signMinipayMessage } from "@/lib/minipay";
 import Image from "next/image";
-import { XIcon } from "lucide-react";
+import { XIcon, ImageIcon } from "lucide-react";
 
 const MAX_FILE_SIZE = 5000000;
 
@@ -137,15 +137,15 @@ const CreateArtifactForm = () => {
           name="file"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Image</FormLabel>
-              <div className="flex items-center gap-2">
-                {field.value && (
-                  <div className="relative w-20 h-20 rounded-md border-2">
+              <FormLabel>Artifact Image</FormLabel>
+              <div className="items-center">
+                {field.value ? (
+                  <div className="relative w-full h-[350px] lg:w-72 lg:h-72  rounded-lg border-2">
                     <Image
                       src={URL.createObjectURL(field.value[0])}
                       alt="Artifact preview"
                       fill={true}
-                      className="object-cover rounded-md"
+                      className="object-cover rounded-lg"
                     />
                     <Button
                       variant="destructive"
@@ -158,10 +158,17 @@ const CreateArtifactForm = () => {
                       <XIcon className="w-4 h-4" />
                     </Button>
                   </div>
+                ) : (
+                  <label htmlFor="file">
+                    <div className="relative flex items-center justify-center w-full h-[350px] lg:w-72 lg:h-72 rounded-lg border-2">
+                      <ImageIcon className="w-16 h-16 text-gray-400" />
+                    </div>
+                  </label>
                 )}
-                <FormControl>
+                <FormControl className="mt-1.5 w-full lg:w-72">
                   <Input
                     type="file"
+                    id="file"
                     onBlur={field.onBlur}
                     name={field.name}
                     onChange={(e) => {
@@ -171,7 +178,7 @@ const CreateArtifactForm = () => {
                   />
                 </FormControl>
               </div>
-              <FormDescription>This is the artifact image.</FormDescription>
+
               <FormMessage />
             </FormItem>
           )}
@@ -180,13 +187,19 @@ const CreateArtifactForm = () => {
           control={form.control}
           name="license"
           render={({ field }) => (
-            <SelectLicenseFormItem
-              onValueChange={field.onChange}
-              defaultValue={field.value}
-            />
+            <div className="w-full lg:w-72">
+              <SelectLicenseFormItem
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+              />
+            </div>
           )}
         />
-        <LoadingButton type="submit" isLoading={isLoading}>
+        <LoadingButton
+          type="submit"
+          className="w-full lg:w-72"
+          isLoading={isLoading}
+        >
           Create Artifact
         </LoadingButton>
       </form>
