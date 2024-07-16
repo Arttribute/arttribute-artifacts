@@ -137,7 +137,6 @@ const CreateArtifactForm = () => {
           name="file"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Artifact Image</FormLabel>
               <div className="items-center">
                 {field.value ? (
                   <div className="relative w-full h-[350px] lg:w-72 lg:h-72  rounded-lg border-2">
@@ -160,7 +159,7 @@ const CreateArtifactForm = () => {
                   </div>
                 ) : (
                   <label htmlFor="file">
-                    <div className="relative flex items-center justify-center w-full h-[350px] lg:w-72 lg:h-72 rounded-lg border-2">
+                    <div className="relative bg-gray-50 flex items-center justify-center w-full h-[350px] lg:w-72 lg:h-72 rounded-lg border-2">
                       <ImageIcon className="w-16 h-16 text-gray-400" />
                     </div>
                   </label>
