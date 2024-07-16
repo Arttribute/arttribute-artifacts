@@ -42,7 +42,7 @@ const licenses = [
 export default function HomePage() {
   return (
     <>
-      <div className="border rounded-lg px-4 py-4">
+      <div className="border rounded-lg mx-4  px-4 py-4">
         {licenses.map((license, index) => (
           <Card key={index} className="m-4 border-gray-300 rounded-xl ">
             <CardContent className="p-3">
@@ -60,7 +60,7 @@ export default function HomePage() {
                   className="m-2 p-2"
                 />
                 <div className="m-1 p-1 ">
-                  <h2 className="text-lg font-bold">{license.title}</h2>
+                  <h2 className=" font-bold">{license.title}</h2>
                   <p className="text-xs text-gray-500">{license.description}</p>
                 </div>
               </div>
